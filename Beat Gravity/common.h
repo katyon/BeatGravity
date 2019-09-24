@@ -5,6 +5,13 @@
 #define PI	(3.1415926535897932384626433832795f)	// π
 
 // シーン管理用定数
-#define SCENE_TITLE     (0)	// タイトル
-#define SCENE_GAME      (1)	// ゲーム
-#define SCENE_RESULT	(2)	// リザルト
+enum SCENE_CASE
+{
+	SCENE_TITLE, SCENE_GAME, SCENE_RESULT
+};
+
+// state用定数
+enum STATE
+{
+	INIT,NORMAL
+};

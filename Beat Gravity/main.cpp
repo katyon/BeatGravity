@@ -40,6 +40,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return -1;
 
 	// ƒ^ƒCƒgƒ‹‚Ì‰Šú‰»
+	title_initialize();
 
 	// •`‰ææ‚ğ— ‰æ–Ê‚É‚·‚é
 	SetDrawScreen(DX_SCREEN_BACK);

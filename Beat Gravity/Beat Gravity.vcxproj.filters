@@ -32,7 +32,7 @@
     <ClInclude Include="scene_title.h">
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
-    <ClInclude Include="snece_game.h">
+    <ClInclude Include="scene_game.h">
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
   </ItemGroup>
