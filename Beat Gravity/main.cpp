@@ -2,6 +2,7 @@
 #include "DxLib.h"
 
 #include "common.h"
+#include "input.h"
 #include "scene_title.h"
 #include "scene_game.h"
 
@@ -9,6 +10,8 @@
 // シーン切り替え用変数
 int curScene;
 int nextScene;
+
+// インスタンス宣言 ---------------------------------------------------------------------------------
 
 // WinMain -----------------------------------------------------------------------------------------
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -39,7 +42,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	if (DxLib_Init() < 0)
 		return -1;
 
-	// タイトルの初期化
+	// タイトルの初期設定
 	title_initialize();
 
 	// 描画先を裏画面にする
@@ -53,12 +56,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		clsDx();
 
-		// 入力状態の更新処理
-
 		// ゲームシーン切り替え
-		if (nextScene != curScene)	// 次フレームでシーン変更があれば
+		if (nextScene != curScene)
 		{
-			switch (curScene)		// 現シーンの終了処理を行う
+            // 現シーンの終了処理を行う
+#pragma region NowEnd
+			switch (curScene)
 			{
 			case SCENE_TITLE:
 				title_end();
@@ -67,8 +70,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				game_end();
 				break;
 			}
-
-			switch (nextScene)		// 次シーンの初期化を行う
+#pragma endregion
+            // 次シーンの初期化を行う
+#pragma region NextInitialize
+			switch (nextScene)
 			{
 			case SCENE_TITLE:
 				title_initialize();
@@ -77,10 +82,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				game_initialize();
 				break;
 			}
-			curScene = nextScene;	// 現シーンに次シーンを代入
+#pragma endregion
+			curScene = nextScene;
 		}
 
 		// 現在のシーンの更新処理
+#pragma region NowUpdate
 		switch (curScene)
 		{
 		case SCENE_TITLE:
@@ -90,8 +97,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			game_update();
 			break;
 		}
+#pragma endregion
 
 		// 現在のシーンの描画処理
+#pragma region NowDraw
 		switch (curScene)
 		{
 		case SCENE_TITLE:
@@ -101,12 +110,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			game_draw();
 			break;
 		}
+#pragma endregion
 
 		// 裏画面の内容を表画面に反映
 		ScreenFlip();
 	}
 
 	// 現在のシーンの終了処理
+#pragma region NowEnd
 	switch (curScene)
 	{
 	case SCENE_TITLE:
@@ -116,6 +127,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		game_end();
 		break;
 	}
+#pragma endregion
 
 	// 全グラフィックの削除
 	DxLib::InitGraph();

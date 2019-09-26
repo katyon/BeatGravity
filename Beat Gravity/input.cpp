@@ -1,28 +1,31 @@
 // インクルード -------------------------------------------------------------------------------------
-#include "DxLib.h"
-
-#include "input.h"
-// インスタンス宣言 ---------------------------------------------------------------------------------
-
-// 変数 --------------------------------------------------------------------------------------------
-char key_buf[256] = { 0 };
+//#include "DxLib.h"
+//
+//#include "input.h"
 
 // 関数実体 ----------------------------------------------------------------------------------------
-// 入力状態の更新
-void input_update(void)
-{
-	//キーの設定
-	char key[MAX_KEY];			    //押されている間処理が続く
-	char key_trg[MAX_KEY] = { 0 };  //押された瞬間だけ処理
-
-	GetHitKeyStateAll(key);
-
-	for (int n = 0; n < MAX_KEY; n++)
-	{
-		if (key[n] && !(key_buf[n]))
-		{
-			key_trg[n] = key[n];
-		}
-		key_buf[n] = key[n];
-	}
-}
+//// 入力状態の初期化
+//void INPUTKEY::initialize(void)
+//{
+//    for (int i = 0; i < MAX_KEY; i++)
+//    {
+//        key_buf[i] = 0;
+//        key[i] = 0;
+//        key_trg[i] = 0;
+//    }
+//}
+//
+//// 入力状態の更新
+//void INPUTKEY::update(void)
+//{
+//	GetHitKeyStateAll(key);
+//
+//	for (int n = 0; n < MAX_KEY; n++)
+//	{
+//		if (key[n] && !(key_buf[n]))
+//		{
+//            key_trg[n] = key[n];
+//		}
+//        key_buf[n] = key[n];
+//	}
+//}

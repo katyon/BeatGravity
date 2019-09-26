@@ -2,7 +2,13 @@
 #include "DxLib.h"
 
 #include "common.h"
+#include "input.h"
 #include "scene_title.h"
+
+// 変数 --------------------------------------------------------------------------------------------
+// キー用変数
+char key_buf[MAX_KEY];
+
 // インスタンス宣言 ---------------------------------------------------------------------------------
 TITLE title;
 
@@ -21,6 +27,19 @@ void title_initialize(void)
 // タイトルの更新処理
 void title_update(void)
 {
+#pragma region KeyUpdate
+    //キーの設定
+    char key[MAX_KEY];              //押されている間処理が続く
+    char key_trg[MAX_KEY] = { 0 };  //押された瞬間だけ処理
+
+    GetHitKeyStateAll(key);
+
+    for (int n = 0; n < MAX_KEY; n++)
+    {
+        if (key[n] && !(key_buf[n])) key_trg[n] = key[n];
+        key_buf[n] = key[n];
+    }
+#pragma endregion
 	switch (title.state)
 	{
 	case INIT:
@@ -30,7 +49,7 @@ void title_update(void)
 
 	case NORMAL:
 		///// 通常時 /////
-		if (CheckHitKey(KEY_INPUT_SPACE) == 1)
+        if (key_trg[KEY_INPUT_SPACE])
 		{
 			nextScene = SCENE_GAME;
 		}
