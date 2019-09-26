@@ -1,7 +1,7 @@
 #pragma once
 // 定数 ----------------------------------------------------------------
-#define GAME_SCREEN_WIDTH	(1280)					// ゲーム画面の幅
-#define GAME_SCREEN_HEIGHT	(720)					// ゲーム画面の高さ
+#define GAME_SCREEN_WIDTH	(1600)					// ゲーム画面の幅
+#define GAME_SCREEN_HEIGHT	(900)					// ゲーム画面の高さ
 #define PI	(3.1415926535897932384626433832795f)	// π
 
 // シーン管理用定数

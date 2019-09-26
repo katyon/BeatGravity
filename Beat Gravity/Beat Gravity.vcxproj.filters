@@ -13,6 +13,9 @@
     <ClCompile Include="scene_title.cpp">
       <Filter>ソースファイル</Filter>
     </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ヘッダーファイル">
@@ -33,6 +36,9 @@
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
     <ClInclude Include="scene_game.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
   </ItemGroup>

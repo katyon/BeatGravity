@@ -3,30 +3,28 @@
 
 #include "common.h"
 #include "input.h"
-#include "scene_title.h"
+#include "player.h"
 
 // 変数 --------------------------------------------------------------------------------------------
 // キー用変数
-char key_buf[MAX_KEY];
+extern char key_buf[MAX_KEY];
 
 // シーン遷移用変数
 extern int nextScene;
 
 // インスタンス宣言 ---------------------------------------------------------------------------------
-TITLE title;
+PLAYER pl;
 
 // 関数実体 ----------------------------------------------------------------------------------------
-// タイトルの初期設定
-void title_initialize(void)
+// プレイヤーの初期設定
+void player_initialize(void)
 {
-	title.state = 0;
-	title.titmer = 0;
-	title.transition_flg = false;
-	title.bgHND = LoadGraph("Data\\Images\\title_bg.png");
+    pl.state = 0;
+    pl.plHND = LoadGraph("Data\\Images\\player.png");
 }
 
-// タイトルの更新処理
-void title_update(void)
+// プレイヤーの更新処理
+void player_update(void)
 {
 #pragma region KeyUpdate
     //キーの設定
@@ -41,33 +39,28 @@ void title_update(void)
         key_buf[n] = key[n];
     }
 #pragma endregion
-	switch (title.state)
-	{
-	case INIT:
-		///// 初期設定 /////
-		title.state++;
-		break;
+    switch (pl.state)
+    {
+    case INIT:
+        ///// 初期設定 /////
+        pl.state++;
+        break;
 
-	case NORMAL:
-		///// 通常時 /////
-        if (key_trg[KEY_INPUT_SPACE])
-		{
-			nextScene = SCENE_GAME;
-		}
-		title_draw();
-		break;
-	}
-	title.titmer++;
+    case NORMAL:
+        ///// 通常時 /////
+
+        break;
+    }
 }
 
-// タイトルの描画処理
-void title_draw(void)
+// プレイヤーの描画処理
+void player_draw(void)
 {
-	DrawGraph(0, 0, title.bgHND, false);
+    DrawGraph(0, 0, pl.plHND, true);
 }
 
-// タイトルの終了処理
-void title_end(void)
+// プレイヤーの終了処理
+void player_end(void)
 {
-	DeleteGraph(title.bgHND);
+    DeleteGraph(pl.plHND);
 }

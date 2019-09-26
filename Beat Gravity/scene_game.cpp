@@ -3,16 +3,18 @@
 
 #include "common.h"
 #include "input.h"
+#include "player.h"
 #include "scene_game.h"
 
 // 変数 --------------------------------------------------------------------------------------------
 // キー用変数
 extern char key_buf[MAX_KEY];
 
+// シーン遷移用変数
+extern int nextScene;
+
 // インスタンス宣言 ---------------------------------------------------------------------------------
 GAME game;
-
-extern int nextScene;
 
 // 関数実体 ----------------------------------------------------------------------------------------
 // ゲームの初期設定
@@ -21,7 +23,7 @@ void game_initialize(void)
 	game.state = 0;
 	game.titmer = 0;
 	game.transition_flg = false;
-	game.bgHND = LoadGraph("Data\\Images\\game_bg1.png");
+	game.bgHND = LoadGraph("Data\\Images\\game_bg.png");
 }
 
 // ゲームの更新処理
@@ -44,6 +46,7 @@ void game_update(void)
 	{
 	case INIT:
 		///// 初期設定 /////
+        player_initialize();
 		game.state++;
 		break;
 
@@ -65,10 +68,12 @@ void game_update(void)
 void game_draw(void)
 {
 	DrawGraph(0, 0, game.bgHND, false);
+    player_draw();
 }
 
 // ゲームの終了処理
 void game_end(void)
 {
 	DeleteGraph(game.bgHND);
+    player_end();
 }
