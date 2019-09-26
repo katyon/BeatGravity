@@ -5,6 +5,7 @@
 #include "input.h"
 #include "player.h"
 #include "scene_game.h"
+#include "stage.h"
 
 // •Ï” --------------------------------------------------------------------------------------------
 // ƒL[—p•Ï”
@@ -47,6 +48,7 @@ void game_update(void)
 	case INIT:
 		///// ‰Šúİ’è /////
         player_initialize();
+        stage_initialize();
 		game.state++;
 		break;
 
@@ -68,6 +70,7 @@ void game_update(void)
 void game_draw(void)
 {
 	DrawGraph(0, 0, game.bgHND, false);
+    stage_draw();
     player_draw();
 }
 
@@ -75,5 +78,6 @@ void game_draw(void)
 void game_end(void)
 {
 	DeleteGraph(game.bgHND);
+    stage_end();
     player_end();
 }

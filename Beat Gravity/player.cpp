@@ -20,6 +20,8 @@ PLAYER pl;
 void player_initialize(void)
 {
     pl.state = 0;
+    pl.posX = 0;
+    pl.posY = 0;
     pl.plHND = LoadGraph("Data\\Images\\player.png");
 }
 
@@ -56,7 +58,7 @@ void player_update(void)
 // プレイヤーの描画処理
 void player_draw(void)
 {
-    DrawGraph(0, 0, pl.plHND, true);
+    DrawGraph(pl.posX, pl.posY, pl.plHND, true);
 }
 
 // プレイヤーの終了処理

@@ -5,8 +5,10 @@
 class PLAYER
 {
 public:
-    int state = 0;					// 状態
-    int plHND = 0;					// playerのグラフィックデータハンドル
+    int state;  // 状態
+    int posX;   // X座標
+    int posY;   // Y座標
+    int plHND;  // playerのグラフィックハンドル
 };
 
 // プロトタイプ宣言 -----------------------------------------------------
