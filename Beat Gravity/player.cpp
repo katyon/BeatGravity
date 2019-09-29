@@ -4,6 +4,7 @@
 #include "common.h"
 #include "input.h"
 #include "player.h"
+#include "stage.h"
 
 // 変数 --------------------------------------------------------------------------------------------
 // キー用変数
@@ -22,6 +23,8 @@ void player_initialize(void)
     pl.state = 0;
     pl.posX = 0;
     pl.posY = 0;
+    pl.pivotX = 0;
+    pl.pivotY = 0;
     pl.plHND = LoadGraph("Data\\Images\\player.png");
 }
 
@@ -50,7 +53,33 @@ void player_update(void)
 
     case NORMAL:
         ///// 通常時 /////
+        // プレイヤーの中心座標を更新
+        pl.pivotX = pl.posX + PLAYER_SIZE / 2;
+        pl.pivotY = pl.posY + PLAYER_SIZE / 2;
 
+        // debug用------------------
+        if (key[KEY_INPUT_A])
+        {
+            pl.posX-=3;
+        }
+        if (key[KEY_INPUT_D])
+        {
+            pl.posX+=3;
+        }
+        if (key[KEY_INPUT_W])
+        {
+            pl.posY-=3;
+        }
+        if (key[KEY_INPUT_S])
+        {
+            pl.posY+=3;
+        }
+        if (detect_chip(pl.posX, pl.posY + 64, STAGE4) == 1 ||
+            detect_chip(pl.posX + 64, pl.posY + 64, STAGE4) == 1)
+        {
+            pl.posY = pl.posY / 64 * 64;
+        }
+        //--------------------------
         break;
     }
 }
@@ -59,6 +88,8 @@ void player_update(void)
 void player_draw(void)
 {
     DrawGraph(pl.posX, pl.posY, pl.plHND, true);
+    // debug用
+    DrawBox(pl.posX, pl.posY, pl.posX+63,pl.posY+63,GetColor(1, 0, 0), FALSE);
 }
 
 // プレイヤーの終了処理

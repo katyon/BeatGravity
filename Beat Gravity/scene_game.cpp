@@ -60,6 +60,7 @@ void game_update(void)
 			nextScene = SCENE_TITLE;
 		}
         //---------------------------------
+        player_update();
 		game_draw();
 		break;
 	}
