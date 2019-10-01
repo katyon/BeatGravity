@@ -7,8 +7,8 @@
 #define STAGE2_YCONST    (9)
 #define STAGE3_XCONST    (16)
 #define STAGE3_YCONST    (9)
-#define STAGE4_XCONST    (25)
-#define STAGE4_YCONST    (15)
+#define STAGE4_XCONST    (32)
+#define STAGE4_YCONST    (18)
 
 enum STAGENUM
 {

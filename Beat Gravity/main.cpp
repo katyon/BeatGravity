@@ -2,7 +2,6 @@
 #include "DxLib.h"
 
 #include "common.h"
-#include "input.h"
 #include "scene_title.h"
 #include "scene_game.h"
 
@@ -12,6 +11,7 @@ int curScene;
 int nextScene;
 
 // インスタンス宣言 ---------------------------------------------------------------------------------
+
 
 // WinMain -----------------------------------------------------------------------------------------
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
