@@ -4,16 +4,10 @@
     <ClCompile Include="main.cpp">
       <Filter>ソースファイル</Filter>
     </ClCompile>
-    <ClCompile Include="input.cpp">
-      <Filter>ソースファイル</Filter>
-    </ClCompile>
     <ClCompile Include="scene_game.cpp">
       <Filter>ソースファイル</Filter>
     </ClCompile>
     <ClCompile Include="scene_title.cpp">
-      <Filter>ソースファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="player.cpp">
       <Filter>ソースファイル</Filter>
     </ClCompile>
     <ClCompile Include="stage.cpp">
@@ -32,9 +26,6 @@
     <ClInclude Include="common.h">
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
-    <ClInclude Include="input.h">
-      <Filter>ヘッダーファイル</Filter>
-    </ClInclude>
     <ClInclude Include="scene_title.h">
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
@@ -42,9 +33,6 @@
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
     <ClInclude Include="stage.h">
-      <Filter>ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="playe.h">
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
   </ItemGroup>

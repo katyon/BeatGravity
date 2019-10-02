@@ -1,5 +1,6 @@
 #pragma once
 // 定数 ----------------------------------------------------------------
+#define GRAVITY (1)
 
 // クラス --------------------------------------------------------------
 class GAME
@@ -8,7 +9,7 @@ public:
 	int state = 0;					// 状態
 	int titmer = 0;					// タイマー
 	int bgHND = 0;					// 背景のデータハンドル
-	bool transition_flg = false;	// シーン遷移用のフラグ
+	bool nextSceneflg = false;  	// シーン遷移用のフラグ
 };
 
 class PLAYER
@@ -17,11 +18,11 @@ public:
     int state;       // 状態
     int posX;        // X座標
     int posY;        // Y座標
-    int pivotX;      // 中心X座標
-    int pivotY;      // 中心Y座標
     int speed;       // X軸方向の速度
     int jumppower;   // ジャンプ力
-    bool jumpflg;    // 空中にいるかどうかの判定(空中ならtrue)
+    int gravity;     // プレイヤーにかかる重力
+    bool gravityflg; // 重力が反転しているかどうかの判定(下向きでtrue)
+    bool grandflg;   // 地面にいるかどうかの判定(地面ならtrue)
     int plHND;       // playerのグラフィックハンドル
 };
 
