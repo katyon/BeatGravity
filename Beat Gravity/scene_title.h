@@ -6,7 +6,7 @@ class TITLE
 {
 public:
 	int state = 0;					// 状態
-	int titmer = 0;					// タイマー
+	int timer = 0;					// タイマー
 	int bgHND = 0;					// 背景のデータハンドル
 	bool transition_flg = false;	// シーン遷移用のフラグ
 };

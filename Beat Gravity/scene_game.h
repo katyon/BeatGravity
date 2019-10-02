@@ -7,9 +7,16 @@ class GAME
 {
 public:
 	int state = 0;					// 状態
-	int titmer = 0;					// タイマー
+	int timer = 0;					// タイマー
+    int score = 0;                  // スコア
+    int bgposX = 0;                 // 背景X座標
+    int bgposY = 0;                 // 背景Y座標
+    int bgspeed = 0;                // 背景スクロール速度
+    bool deathflg = false;          // 死亡：true
+    bool clearflg = false;          // ゲームクリア：true
+    bool choice = true;             // Yes:true No:false
 	int bgHND = 0;					// 背景のデータハンドル
-	bool nextSceneflg = false;  	// シーン遷移用のフラグ
+    int reHND[2] = { 0 };           // リトライ選択用のデータハンドル
 };
 
 class PLAYER
@@ -33,6 +40,7 @@ void game_draw(void);		// ゲームの描画処理
 void game_end(void);		// ゲームの終了処理
 
 void player_initialize(void);	    // プレイヤーの初期設定
-void player_update(void);	    	// プレイヤーの更新処理
 void player_draw(void);		    	// プレイヤーの描画処理
 void player_end(void);		    	// プレイヤーの終了処理
+
+void retry_draw(void);  // リトライの描画処理

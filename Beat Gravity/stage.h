@@ -19,7 +19,8 @@ enum STAGENUM
 
 enum CHIP
 {
-    EMPTY, TOP, BOTTOM, LEFT, RIGHT, HOLE
+    EMPTY, TOP, BOTTOM, LEFT, RIGHT, LCORNER, RCORNER, INSIDE, 
+    HOLE
 };
 
 // ƒNƒ‰ƒX --------------------------------------------------------------
