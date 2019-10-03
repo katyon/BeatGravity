@@ -2,8 +2,11 @@
 #include "DxLib.h"
 
 #include "common.h"
-#include "scene_title.h"
 #include "scene_game.h"
+#include "scene_load.h"
+#include "scene_result.h"
+#include "scene_select.h"
+#include "scene_title.h"
 
 // 変数 --------------------------------------------------------------------------------------------
 // シーン切り替え用変数
@@ -66,21 +69,39 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			case SCENE_TITLE:
 				title_end();
 				break;
+            case SCENE_SELECT:
+                select_end();
+                break;
+            case SCENE_LOAD:
+                load_end();
+                break;
 			case SCENE_GAME:
 				game_end();
 				break;
+            case SCENE_RESULT:
+                result_end();
+                break;
 			}
 #pragma endregion
             // 次シーンの初期化を行う
 #pragma region NextInitialize
 			switch (nextScene)
 			{
-			case SCENE_TITLE:
-				title_initialize();
-				break;
-			case SCENE_GAME:
-				game_initialize();
-				break;
+            case SCENE_TITLE:
+                title_initialize();
+                break;
+            case SCENE_SELECT:
+                select_initialize();
+                break;
+            case SCENE_LOAD:
+                load_initialize();
+                break;
+            case SCENE_GAME:
+                game_initialize();
+                break;
+            case SCENE_RESULT:
+                result_initialize();
+                break;
 			}
 #pragma endregion
 			curScene = nextScene;
@@ -90,12 +111,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 #pragma region NowUpdate
 		switch (curScene)
 		{
-		case SCENE_TITLE:
-			title_update();
-			break;
-		case SCENE_GAME:
-			game_update();
-			break;
+        case SCENE_TITLE:
+            title_update();
+            break;
+        case SCENE_SELECT:
+            select_update();
+            break;
+        case SCENE_LOAD:
+            load_update();
+            break;
+        case SCENE_GAME:
+            game_update();
+            break;
+        case SCENE_RESULT:
+            result_update();
+            break;
 		}
 #pragma endregion
 
@@ -103,12 +133,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 #pragma region NowDraw
 		switch (curScene)
 		{
-		case SCENE_TITLE:
-			title_draw();
-			break;
-		case SCENE_GAME:
-			game_draw();
-			break;
+        case SCENE_TITLE:
+            title_draw();
+            break;
+        case SCENE_SELECT:
+            select_draw();
+            break;
+        case SCENE_LOAD:
+            load_draw();
+            break;
+        case SCENE_GAME:
+            game_draw();
+            break;
+        case SCENE_RESULT:
+            result_draw();
+            break;
 		}
 #pragma endregion
 
@@ -120,12 +159,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 #pragma region NowEnd
 	switch (curScene)
 	{
-	case SCENE_TITLE:
-		title_end();
-		break;
-	case SCENE_GAME:
-		game_end();
-		break;
+    case SCENE_TITLE:
+        title_end();
+        break;
+    case SCENE_SELECT:
+        select_end();
+        break;
+    case SCENE_LOAD:
+        load_end();
+        break;
+    case SCENE_GAME:
+        game_end();
+        break;
+    case SCENE_RESULT:
+        result_end();
+        break;
 	}
 #pragma endregion
 

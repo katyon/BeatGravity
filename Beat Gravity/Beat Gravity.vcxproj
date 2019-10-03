@@ -159,14 +159,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="scene_load.cpp" />
     <ClCompile Include="scene_game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="scene_result.cpp" />
     <ClCompile Include="scene_select.cpp" />
     <ClCompile Include="scene_title.cpp" />
     <ClCompile Include="stage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h" />
+    <ClInclude Include="scene_load.h" />
+    <ClInclude Include="scene_result.h" />
     <ClInclude Include="scene_select.h" />
     <ClInclude Include="scene_title.h" />
     <ClInclude Include="scene_game.h" />

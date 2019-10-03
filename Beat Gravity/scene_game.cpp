@@ -85,7 +85,7 @@ void game_update(void)
         if (key_trg[KEY_INPUT_2])nextScene = SCENE_SELECT;
         if (key_trg[KEY_INPUT_3])nextScene = SCENE_LOAD;
         if (key_trg[KEY_INPUT_4])nextScene = SCENE_GAME;
-        if (key_trg[KEY_INPUT_1])nextScene = SCENE_RESULT;
+        if (key_trg[KEY_INPUT_5])nextScene = SCENE_RESULT;
 
         if (key_trg[KEY_INPUT_LSHIFT])
         {
@@ -267,16 +267,25 @@ void game_draw(void)
         retry_draw();
     }
     // debug用 ------------------------------------------------------------------------------
-    DrawFormatString(0, 0, GetColor(255, 255, 255), "game.timer:%d", game.timer);
-    DrawFormatString(0, 20, GetColor(255, 255, 255), "game.score:%d", game.score);
-    DrawFormatString(0, 40, GetColor(255, 255, 255), "game.deathflg:%d", game.deathflg);
-    DrawFormatString(0, 60, GetColor(255, 255, 255), "game.clearflg:%d", game.clearflg);
+    DrawFormatString(0, 0, GetColor(255, 255, 255), "シーン切り替え");
+    DrawFormatString(0, 20, GetColor(255, 255, 255), "title:1キー");
+    DrawFormatString(0, 40, GetColor(255, 255, 255), "select:2キー");
+    DrawFormatString(0, 60, GetColor(255, 255, 255), "load:3キー");
+    DrawFormatString(0, 80, GetColor(255, 255, 255), "game:4キー");
+    DrawFormatString(0, 100, GetColor(255, 255, 255), "result:5キー");
+    DrawFormatString(0, 120, GetColor(255, 255, 255), "重力反転:Zキー");
+    DrawFormatString(0, 140, GetColor(255, 255, 255), "リセット:Xキー");
+    
+    DrawFormatString(150, 0, GetColor(255, 255, 255), "game.timer:%d", game.timer);
+    DrawFormatString(150, 20, GetColor(255, 255, 255), "game.score:%d", game.score);
+    DrawFormatString(150, 40, GetColor(255, 255, 255), "game.deathflg:%d", game.deathflg);
+    DrawFormatString(150, 60, GetColor(255, 255, 255), "game.clearflg:%d", game.clearflg);
 
-    DrawFormatString(150, 0, GetColor(255, 255, 255), "pl.posX:%d", pl.posX);
-    DrawFormatString(150, 20, GetColor(255, 255, 255), "pl.posY:%d", pl.posY);
-    DrawFormatString(150, 40, GetColor(255, 255, 255), "pl.gravity:%d", pl.gravity);
-    DrawFormatString(150, 60, GetColor(255, 255, 255), "pl.gravityflg:%d", pl.gravityflg);
-    DrawFormatString(150, 80, GetColor(255, 255, 255), "pl.grandflg:%d", pl.grandflg);
+    DrawFormatString(300, 0, GetColor(255, 255, 255), "pl.posX:%d", pl.posX);
+    DrawFormatString(300, 20, GetColor(255, 255, 255), "pl.posY:%d", pl.posY);
+    DrawFormatString(300, 40, GetColor(255, 255, 255), "pl.gravity:%d", pl.gravity);
+    DrawFormatString(300, 60, GetColor(255, 255, 255), "pl.gravityflg:%d", pl.gravityflg);
+    DrawFormatString(300, 80, GetColor(255, 255, 255), "pl.grandflg:%d", pl.grandflg);
     //--------------------------------------------------------------------------------------
 }
 

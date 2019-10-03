@@ -55,7 +55,7 @@ void title_update(void)
         if (key_trg[KEY_INPUT_2])nextScene = SCENE_SELECT;
         if (key_trg[KEY_INPUT_3])nextScene = SCENE_LOAD;
         if (key_trg[KEY_INPUT_4])nextScene = SCENE_GAME;
-        if (key_trg[KEY_INPUT_1])nextScene = SCENE_RESULT;
+        if (key_trg[KEY_INPUT_5])nextScene = SCENE_RESULT;
         //-------------------------------
         if (key_trg[KEY_INPUT_SPACE])
         {
@@ -70,6 +70,15 @@ void title_update(void)
 void title_draw(void)
 {
 	DrawGraph(0, 0, title.bgHND, false);
+
+    // debug用 ---------------------------------------------------------
+    DrawFormatString(0, 0, GetColor(255, 255, 255), "シーン切り替え");
+    DrawFormatString(0, 20, GetColor(255, 255, 255), "title:1キー");
+    DrawFormatString(0, 40, GetColor(255, 255, 255), "select:2キー");
+    DrawFormatString(0, 60, GetColor(255, 255, 255), "load:3キー");
+    DrawFormatString(0, 80, GetColor(255, 255, 255), "game:4キー");
+    DrawFormatString(0, 100, GetColor(255, 255, 255), "result:5キー");
+    //---------------------------------------------------------------
 }
 
 // タイトルの終了処理

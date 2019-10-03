@@ -2,7 +2,7 @@
 #include "DxLib.h"
 
 #include "common.h"
-#include "scene_select.h"
+#include "scene_result.h"
 
 // 変数 --------------------------------------------------------------------------------------------
 // キー用変数
@@ -12,19 +12,19 @@ extern char key_buf[MAX_KEY];
 extern int nextScene;
 
 // インスタンス宣言 ---------------------------------------------------------------------------------
-SELECT Select;
+RESULT result;
 
 
 // 関数実体 ----------------------------------------------------------------------------------------
-void select_initialize(void)
+void result_initialize(void)
 {
-    Select.state = 0;
-    Select.timer = 0;
-    Select.transition_flg = false;
-    Select.bgHND = LoadGraph("Data\\Images\\select_bg.png");
+    result.state = 0;
+    result.timer = 0;
+    result.transition_flg = false;
+    result.bgHND = LoadGraph("Data\\Images\\result_bg.png");
 }
 
-void select_update(void)
+void result_update(void)
 {
 #pragma region KeyUpdate
     //キーの設定
@@ -39,11 +39,11 @@ void select_update(void)
         key_buf[n] = key[n];
     }
 #pragma endregion
-    switch (Select.state)
+    switch (result.state)
     {
     case INIT:
         ///// 初期設定 /////
-        Select.state++;
+        result.state++;
         break;
 
     case NORMAL:
@@ -57,12 +57,12 @@ void select_update(void)
         //-------------------------------
         break;
     }
-    Select.timer++;
+    result.timer++;
 }
 
-void select_draw(void)
+void result_draw(void)
 {
-    DrawGraph(0, 0, Select.bgHND, false);
+    DrawGraph(0, 0, result.bgHND, false);
 
     // debug用 ---------------------------------------------------------
     DrawFormatString(0, 0, GetColor(255, 255, 255), "シーン切り替え");
@@ -74,7 +74,7 @@ void select_draw(void)
     //---------------------------------------------------------------
 }
 
-void select_end(void)
+void result_end(void)
 {
-    DeleteGraph(Select.bgHND);
+    DeleteGraph(result.bgHND);
 }

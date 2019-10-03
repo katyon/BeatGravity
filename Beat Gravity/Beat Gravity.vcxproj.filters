@@ -16,6 +16,12 @@
     <ClCompile Include="scene_select.cpp">
       <Filter>ソースファイル</Filter>
     </ClCompile>
+    <ClCompile Include="scene_load.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="scene_result.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ヘッダーファイル">
@@ -39,6 +45,12 @@
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
     <ClInclude Include="scene_select.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="scene_load.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="scene_result.h">
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
   </ItemGroup>
