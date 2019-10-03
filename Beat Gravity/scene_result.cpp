@@ -2,11 +2,14 @@
 #include "DxLib.h"
 
 #include "common.h"
+#include "scene_game.h"
+#include "ranking.h"
 #include "scene_result.h"
 
 // 変数 --------------------------------------------------------------------------------------------
 // キー用変数
 extern char key_buf[MAX_KEY];
+
 
 // シーン遷移用変数
 extern int nextScene;
@@ -14,8 +17,8 @@ extern int nextScene;
 // インスタンス宣言 ---------------------------------------------------------------------------------
 RESULT result;
 
-
 // 関数実体 ----------------------------------------------------------------------------------------
+
 void result_initialize(void)
 {
     result.state = 0;
@@ -55,6 +58,13 @@ void result_update(void)
         if (key_trg[KEY_INPUT_4])nextScene = SCENE_GAME;
         if (key_trg[KEY_INPUT_5])nextScene = SCENE_RESULT;
         //-------------------------------
+        
+        // ランキング
+
+        if (R_flg == true) {
+            rank_update();
+            R_flg = false;
+        }
         break;
     }
     result.timer++;

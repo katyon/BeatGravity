@@ -3,6 +3,8 @@
 
 #include "common.h"
 #include "scene_game.h"
+#include "scene_result.h"
+#include "ranking.h"
 #include "stage.h"
 
 // 変数 --------------------------------------------------------------------------------------------
@@ -41,8 +43,8 @@ void player_initialize(void)
     pl.state = 0;
     pl.posX = GAME_SCREEN_WIDTH/2;
     pl.posY = GAME_SCREEN_HEIGHT/2;
-    pl.speed = 8;
-    pl.jumppower = 20;
+    pl.speed = 13;
+    pl.jumppower = 25;
     pl.gravity = GRAVITY;
     pl.gravityflg = true;
     pl.grandflg = false;
@@ -117,12 +119,14 @@ void game_update(void)
 
         if (game.deathflg == true)
         {
+            // 死亡時
             game.state++;
         }
         else
         {
             ///// プレイヤーの更新 /////
             // 通常重力
+#pragma region NormalGravity
             if (pl.gravityflg == true)
             {
                 // ジャンプ
@@ -132,8 +136,8 @@ void game_update(void)
                 }
 
                 // 重力と右移動
-                pl.posY += pl.gravity;
                 pl.posX += pl.speed;
+                pl.posY += pl.gravity;
 
                 // マップチップごとの挙動
                 // 無
@@ -142,6 +146,10 @@ void game_update(void)
                 {
                     pl.grandflg = false;
                     pl.gravity += GRAVITY;
+                    if (pl.gravity > 30)
+                    {
+                        pl.gravity = 30;
+                    }
                 }
                 // 地上
                 if (detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM ||
@@ -153,15 +161,42 @@ void game_update(void)
                     pl.grandflg = true;
                     pl.gravity = 0;
                 }
-                // 壁(左)
-                if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == LEFT ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == LEFT)
+                // 角(左)
+                if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY - 30) == BOTTOM_LCORNER ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 31) == BOTTOM_LCORNER)
                 {
                     // 死亡判定
                     game.deathflg = true;
                 }
+                else if (detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM_LCORNER ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_LCORNER)
+                {
+                    // 移動制限
+                    pl.posY = pl.posY / CHIP_SIZE * CHIP_SIZE;
+
+                    pl.grandflg = true;
+                    pl.gravity = 0;
+                }
+                // 角(右)
+                if (detect_chip(pl.posX, pl.posY - 30) == BOTTOM_RCORNER ||
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 31) == BOTTOM_RCORNER)
+                {
+                    // 死亡判定
+                    game.deathflg = true;
+                }
+                else if (detect_chip(pl.posX + 12, pl.posY + CHIP_SIZE - 1) == BOTTOM_RCORNER ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_RCORNER)
+                {
+                    // 移動制限
+                    pl.posY = pl.posY / CHIP_SIZE * CHIP_SIZE;
+
+                    pl.grandflg = true;
+                    pl.gravity = 0;
+                }
             }
+#pragma endregion
             // 反転重力
+#pragma region RebirthGravity
             else
             {
                 // ジャンプ
@@ -169,7 +204,6 @@ void game_update(void)
                 {
                     pl.gravity -= pl.jumppower;
                 }
-
                 // 重力と右移動
                 pl.posY -= pl.gravity;
                 pl.posX += pl.speed;
@@ -181,6 +215,10 @@ void game_update(void)
                 {
                     pl.grandflg = false;
                     pl.gravity += GRAVITY;
+                    if (pl.gravity > 30)
+                    {
+                        pl.gravity = 30;
+                    }
                 }
                 // 天井
                 if (detect_chip(pl.posX, pl.posY) == TOP ||
@@ -192,6 +230,64 @@ void game_update(void)
                     pl.grandflg = true;
                     pl.gravity = 0;
                 }
+                // 角(左)
+                if (detect_chip(pl.posX + CHIP_SIZE, pl.posY + 30) == TOP_LCORNER ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE + 30) == TOP_LCORNER)
+                {
+                    // 死亡判定
+                    game.deathflg = true;
+                }
+                else if (detect_chip(pl.posX, pl.posY) == TOP_LCORNER ||
+                    detect_chip(pl.posX + CHIP_SIZE - 13, pl.posY) == TOP_LCORNER)
+                {
+                    // 移動制限
+                    pl.posY = pl.posY / CHIP_SIZE * CHIP_SIZE + CHIP_SIZE;
+
+                    pl.grandflg = true;
+                    pl.gravity = 0;
+                }
+                // 角(右)
+                if (detect_chip(pl.posX, pl.posY + 30) == TOP_RCORNER ||
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE + 30) == TOP_RCORNER)
+                {
+                    // 死亡判定
+                    game.deathflg = true;
+                }
+                else if (detect_chip(pl.posX + 12, pl.posY) == TOP_RCORNER ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_RCORNER)
+                {
+                    // 移動制限
+                    pl.posY = pl.posY / CHIP_SIZE * CHIP_SIZE + CHIP_SIZE;
+
+                    pl.grandflg = true;
+                    pl.gravity = 0;
+                }
+            }
+#pragma endregion
+            // 共通処理
+#pragma region Common
+            // 壁(左)
+            if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == LEFT ||
+                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == LEFT)
+            {
+                // 死亡判定
+                game.deathflg = true;
+            }
+            // 壁(右)
+            if (detect_chip(pl.posX , pl.posY) == RIGHT ||
+                detect_chip(pl.posX , pl.posY + CHIP_SIZE - 1) == RIGHT)
+            {
+                // 死亡判定
+                game.deathflg = true;
+            }
+            // 崖下
+            if (detect_chip(pl.posX, pl.posY) == HOLE ||
+                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == HOLE ||
+                detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == HOLE ||
+                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == HOLE)
+            {
+                // 死亡判定
+                game.deathflg = true;
             }
             // 背景スクロール処理
             game.bgposX -= game.bgspeed;
@@ -200,24 +296,42 @@ void game_update(void)
                 game.bgposX = 0;
             }
         }
+        // ランキング
+        R_flg = true;
+        game.score++;
+
+#pragma endregion
         // debug用------------------
-        //if (key[KEY_INPUT_LEFT])
-        //{
-        //    pl.posX -= pl.speed;
-        //}
-        //if (key[KEY_INPUT_RIGHT])
-        //{
-        //    pl.posX += pl.speed;
-        //}
-        //if (key[KEY_INPUT_UP])
-        //{
-        //    pl.posY -= pl.speed;
-        //}
-        //if (key[KEY_INPUT_DOWN])
-        //{
-        //    pl.posY += pl.speed;
-        //}
+        if (key[KEY_INPUT_LEFT])
+        {
+            pl.posX -= pl.speed;
+        }
+        if (key[KEY_INPUT_RIGHT])
+        {
+            pl.posX += pl.speed;
+        }
+        if (key[KEY_INPUT_0])
+        {
+            pl.posX++;
+        }
+        if (key[KEY_INPUT_9])
+        {
+            pl.posY++;
+        }
+        if (key[KEY_INPUT_UP])
+        {
+            pl.posY -= pl.speed;
+        }
+        if (key[KEY_INPUT_DOWN])
+        {
+            pl.posY += pl.speed;
+        }
+        if (key_trg[KEY_INPUT_C])
+        {
+            game.state = POSE;
+        }
         //---------------------------
+
         break;
 #pragma endregion
     case RETRY:
@@ -247,6 +361,16 @@ void game_update(void)
 
         break;
 #pragma endregion
+    case POSE:
+#pragma region POSE
+        // degug-------------------
+        if (key_trg[KEY_INPUT_C])
+        {
+            game.state = NORMAL;
+        }
+        //-----------------------
+        game.timer--;
+#pragma endregion
     }
 
 	game.timer++;
@@ -275,6 +399,7 @@ void game_draw(void)
     DrawFormatString(0, 100, GetColor(255, 255, 255), "result:5キー");
     DrawFormatString(0, 120, GetColor(255, 255, 255), "重力反転:Zキー");
     DrawFormatString(0, 140, GetColor(255, 255, 255), "リセット:Xキー");
+    DrawFormatString(0, 160, GetColor(255, 255, 255), "ポーズ:Cキー");
     
     DrawFormatString(150, 0, GetColor(255, 255, 255), "game.timer:%d", game.timer);
     DrawFormatString(150, 20, GetColor(255, 255, 255), "game.score:%d", game.score);

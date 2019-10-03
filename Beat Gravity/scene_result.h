@@ -1,5 +1,6 @@
 #pragma once
 // ’è” ----------------------------------------------------------------
+#define Score_h 5
 
 // ƒNƒ‰ƒX --------------------------------------------------------------
 class RESULT
@@ -16,3 +17,4 @@ void result_initialize(void);
 void result_update(void);
 void result_draw(void);
 void result_end(void);
+
