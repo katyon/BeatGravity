@@ -16,9 +16,9 @@ extern int nextScene;
 
 // インスタンス宣言 ---------------------------------------------------------------------------------
 GAME game;
-
 PLAYER pl;
 
+extern STAGE stage;
 // 関数実体 ----------------------------------------------------------------------------------------
 // ゲームの初期設定
 void game_initialize(void)
@@ -33,8 +33,8 @@ void game_initialize(void)
     game.clearflg = false;
     game.choice = true;
     game.bgHND = LoadGraph("Data\\Images\\game_bg.png");
-    int a=game.reHND[0] = LoadGraph("Data\\Images\\retry_yes.png");
-    int b=game.reHND[1] = LoadGraph("Data\\Images\\retry_no.png");
+    game.reHND[0] = LoadGraph("Data\\Images\\retry_yes.png");
+    game.reHND[1] = LoadGraph("Data\\Images\\retry_no.png");
 }
 
 // プレイヤーの初期設定
@@ -48,7 +48,7 @@ void player_initialize(void)
     pl.gravity = GRAVITY;
     pl.gravityflg = true;
     pl.grandflg = false;
-    pl.plHND = LoadGraph("Data\\Images\\player.png");
+    LoadDivGraph("Data\\Images\\player.png", 5, 5, 1, 60, 60, pl.plHND);
 }
 
 // ゲームの更新処理
@@ -136,8 +136,8 @@ void game_update(void)
                 }
 
                 // 重力と右移動
-                pl.posX += pl.speed;
-                pl.posY += pl.gravity;
+                //pl.posX += pl.speed;
+                //pl.posY += pl.gravity;
 
                 // マップチップごとの挙動
                 // 無
@@ -289,6 +289,28 @@ void game_update(void)
                 // 死亡判定
                 game.deathflg = true;
             }
+            // コイン
+            if (detect_chip(pl.posX, pl.posY) == COIN)
+            {
+                stage.map_copy[pl.posY / CHIP_SIZE][pl.posX / CHIP_SIZE] = EMPTY;
+                game.score += SCORE_COIN;
+            }
+            if(detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == COIN)
+            {
+                stage.map_copy[pl.posY / CHIP_SIZE][(pl.posX + CHIP_SIZE - 1) / CHIP_SIZE] = EMPTY;
+                game.score += SCORE_COIN;
+            }
+            if(detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == COIN)
+            {
+                stage.map_copy[(pl.posY + CHIP_SIZE - 1) / CHIP_SIZE][pl.posX / CHIP_SIZE] = EMPTY;
+                game.score += SCORE_COIN;
+            }
+            if(detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == COIN)
+            {
+                stage.map_copy[(pl.posY + CHIP_SIZE - 1) / CHIP_SIZE][(pl.posX + CHIP_SIZE - 1) / CHIP_SIZE] = EMPTY;
+                game.score += SCORE_COIN;
+            }
+
             // 背景スクロール処理
             game.bgposX -= game.bgspeed;
             if (game.bgposX + GAME_SCREEN_WIDTH < 0)
@@ -296,11 +318,11 @@ void game_update(void)
                 game.bgposX = 0;
             }
         }
+#pragma endregion
+
         // ランキング
         R_flg = true;
-        game.score++;
 
-#pragma endregion
         // debug用------------------
         if (key[KEY_INPUT_LEFT])
         {
@@ -417,7 +439,10 @@ void game_draw(void)
 // プレイヤーの描画処理
 void player_draw(void)
 {
-    DrawGraph(GAME_SCREEN_WIDTH / 2, pl.posY, pl.plHND, true);
+    if (game.deathflg == false)
+    {
+        DrawGraph(GAME_SCREEN_WIDTH / 2, pl.posY, pl.plHND[game.timer / 3 % 5], true);
+    }
     // debug用
     DrawBox(GAME_SCREEN_WIDTH / 2, pl.posY, GAME_SCREEN_WIDTH / 2 + CHIP_SIZE + 1, pl.posY + CHIP_SIZE + 1, GetColor(255, 255, 255), FALSE);
 }
@@ -450,5 +475,8 @@ void game_end(void)
 // プレイヤーの終了処理
 void player_end(void)
 {
-    DeleteGraph(pl.plHND);
+    for (int i = 0; i < 5; i++)
+    {
+        DeleteGraph(pl.plHND[i]);
+    }
 }
