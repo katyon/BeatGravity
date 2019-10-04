@@ -28,21 +28,42 @@ void game_initialize(void)
     game.score = 0;
     game.bgposX = 0;
     game.bgposY = 0;
-    game.bgspeed = 5;
+    game.bgspeed = 1;
+    game.alpha1 = 0;
+    game.alpha2 = 0;
+    game.angle1 = 0;
+    game.angle2 = 0;
     game.deathflg = false;
     game.clearflg = false;
     game.choice = true;
-    game.bgHND = LoadGraph("Data\\Images\\game_bg.png");
+    game.bgHND[0] = LoadGraph("Data\\Images\\game_bg1.png");
+    game.bgHND[1] = LoadGraph("Data\\Images\\game_bg2.png");
     game.reHND[0] = LoadGraph("Data\\Images\\retry_yes.png");
     game.reHND[1] = LoadGraph("Data\\Images\\retry_no.png");
+
+    switch (stage.num)
+    {
+    case STAGE1:
+        game.bgmHND = LoadSoundMem("Data\\Sounds\\stage1BGM.ogg");
+        break;
+    case STAGE2:
+        game.bgmHND = LoadSoundMem("Data\\Sounds\\stage2BGM.ogg");
+        break;
+    case STAGE3:
+        game.bgmHND = LoadSoundMem("Data\\Sounds\\stage3BGM.ogg");
+        break;
+    case STAGE4:
+        game.bgmHND = LoadSoundMem("Data\\Sounds\\stage4BGM.ogg");
+        break;
+    }
 }
 
 // プレイヤーの初期設定
 void player_initialize(void)
 {
     pl.state = 0;
-    pl.posX = GAME_SCREEN_WIDTH/2;
-    pl.posY = GAME_SCREEN_HEIGHT/2;
+    pl.posX = GAME_SCREEN_WIDTH / 2;
+    pl.posY = GAME_SCREEN_HEIGHT / 2;
     pl.speed = 13;
     pl.jumppower = 25;
     pl.gravity = GRAVITY;
@@ -75,6 +96,7 @@ void game_update(void)
         game_initialize();
         player_initialize();
         stage_initialize();
+        PlaySoundMem(game.bgmHND, DX_PLAYTYPE_BACK, TRUE);
 
         game.state++;
         break;
@@ -162,7 +184,7 @@ void game_update(void)
                     pl.gravity = 0;
                 }
                 // 角(左)
-                if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY - 30) == BOTTOM_LCORNER ||
+                if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == BOTTOM_LCORNER ||
                     detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 31) == BOTTOM_LCORNER)
                 {
                     // 死亡判定
@@ -178,13 +200,13 @@ void game_update(void)
                     pl.gravity = 0;
                 }
                 // 角(右)
-                if (detect_chip(pl.posX, pl.posY - 30) == BOTTOM_RCORNER ||
+                if (detect_chip(pl.posX, pl.posY) == BOTTOM_RCORNER ||
                     detect_chip(pl.posX, pl.posY + CHIP_SIZE - 31) == BOTTOM_RCORNER)
                 {
                     // 死亡判定
                     game.deathflg = true;
                 }
-                else if (detect_chip(pl.posX + 12, pl.posY + CHIP_SIZE - 1) == BOTTOM_RCORNER ||
+                else if (detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM_RCORNER ||
                     detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_RCORNER)
                 {
                     // 移動制限
@@ -205,8 +227,8 @@ void game_update(void)
                     pl.gravity -= pl.jumppower;
                 }
                 // 重力と右移動
-                pl.posY -= pl.gravity;
-                pl.posX += pl.speed;
+                //pl.posY -= pl.gravity;
+                //pl.posX += pl.speed;
 
                 // マップチップごとの挙動
                 // 無
@@ -231,14 +253,14 @@ void game_update(void)
                     pl.gravity = 0;
                 }
                 // 角(左)
-                if (detect_chip(pl.posX + CHIP_SIZE, pl.posY + 30) == TOP_LCORNER ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE + 30) == TOP_LCORNER)
+                if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + 30) == TOP_LCORNER || 
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE) == TOP_LCORNER)
                 {
                     // 死亡判定
                     game.deathflg = true;
                 }
                 else if (detect_chip(pl.posX, pl.posY) == TOP_LCORNER ||
-                    detect_chip(pl.posX + CHIP_SIZE - 13, pl.posY) == TOP_LCORNER)
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_LCORNER)
                 {
                     // 移動制限
                     pl.posY = pl.posY / CHIP_SIZE * CHIP_SIZE + CHIP_SIZE;
@@ -248,12 +270,12 @@ void game_update(void)
                 }
                 // 角(右)
                 if (detect_chip(pl.posX, pl.posY + 30) == TOP_RCORNER ||
-                    detect_chip(pl.posX, pl.posY + CHIP_SIZE + 30) == TOP_RCORNER)
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE) == TOP_RCORNER)
                 {
                     // 死亡判定
                     game.deathflg = true;
                 }
-                else if (detect_chip(pl.posX + 12, pl.posY) == TOP_RCORNER ||
+                else if (detect_chip(pl.posX, pl.posY) == TOP_RCORNER ||
                     detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_RCORNER)
                 {
                     // 移動制限
@@ -380,7 +402,7 @@ void game_update(void)
                 nextScene = SCENE_TITLE;
             }
         }
-
+        game.timer--;
         break;
 #pragma endregion
     case POSE:
@@ -392,6 +414,7 @@ void game_update(void)
         }
         //-----------------------
         game.timer--;
+        break;
 #pragma endregion
     }
 
@@ -402,8 +425,42 @@ void game_update(void)
 void game_draw(void)
 {
     // 背景
-	DrawGraph(game.bgposX, game.bgposY, game.bgHND, false);
-    DrawGraph(game.bgposX + GAME_SCREEN_WIDTH, 0, game.bgHND, false);
+    if (pl.gravityflg == true)
+    {
+        game.angle1 = 0;
+    }
+    else
+    {
+        game.angle1 = PI;
+    }
+    DrawRotaGraph(game.bgposX + GAME_SCREEN_WIDTH / 2, game.bgposY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[0], true, false);
+    DrawRotaGraph(game.bgposX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bgposY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[0], true, false);
+    if (pl.gravityflg == true)
+    {
+        game.alpha1 = 0;
+
+        SetDrawBlendMode(DX_BLENDMODE_ALPHA, game.alpha2);
+        if (game.alpha2 > 0)
+        {
+            game.alpha2 -= 5;
+        }
+    }
+    else
+    {
+        game.alpha2 = 255;
+
+        SetDrawBlendMode(DX_BLENDMODE_ALPHA, game.alpha1);
+        if (game.alpha1 < 255)
+        {
+            game.alpha1 += 5;
+        }
+    }
+    DrawRotaGraph(game.bgposX + GAME_SCREEN_WIDTH / 2, game.bgposY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[1], true, false);
+    DrawRotaGraph(game.bgposX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bgposY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[1], true, false);
+    //DrawGraph(game.bgposX, game.bgposY, game.bg2HND, true);
+    //DrawGraph(game.bgposX + GAME_SCREEN_WIDTH, 0, game.bg2HND, true);
+
+    SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
     stage_draw();
     player_draw();
@@ -413,26 +470,26 @@ void game_draw(void)
         retry_draw();
     }
     // debug用 ------------------------------------------------------------------------------
-    DrawFormatString(0, 0, GetColor(255, 255, 255), "シーン切り替え");
-    DrawFormatString(0, 20, GetColor(255, 255, 255), "title:1キー");
-    DrawFormatString(0, 40, GetColor(255, 255, 255), "select:2キー");
-    DrawFormatString(0, 60, GetColor(255, 255, 255), "load:3キー");
-    DrawFormatString(0, 80, GetColor(255, 255, 255), "game:4キー");
-    DrawFormatString(0, 100, GetColor(255, 255, 255), "result:5キー");
-    DrawFormatString(0, 120, GetColor(255, 255, 255), "重力反転:Zキー");
-    DrawFormatString(0, 140, GetColor(255, 255, 255), "リセット:Xキー");
-    DrawFormatString(0, 160, GetColor(255, 255, 255), "ポーズ:Cキー");
+    DrawFormatString(0, 0, GetColor(0, 255, 255), "シーン切り替え");
+    DrawFormatString(0, 20, GetColor(0, 255, 255), "title:1キー");
+    DrawFormatString(0, 40, GetColor(0, 255, 255), "select:2キー");
+    DrawFormatString(0, 60, GetColor(0, 255, 255), "load:3キー");
+    DrawFormatString(0, 80, GetColor(0, 255, 255), "game:4キー");
+    DrawFormatString(0, 100, GetColor(0, 255, 255), "result:5キー");
+    DrawFormatString(0, 120, GetColor(0, 255, 255), "重力反転:Zキー");
+    DrawFormatString(0, 140, GetColor(0, 255, 255), "リセット:Xキー");
+    DrawFormatString(0, 160, GetColor(0, 255, 255), "ポーズ:Cキー");
     
-    DrawFormatString(150, 0, GetColor(255, 255, 255), "game.timer:%d", game.timer);
-    DrawFormatString(150, 20, GetColor(255, 255, 255), "game.score:%d", game.score);
-    DrawFormatString(150, 40, GetColor(255, 255, 255), "game.deathflg:%d", game.deathflg);
-    DrawFormatString(150, 60, GetColor(255, 255, 255), "game.clearflg:%d", game.clearflg);
+    DrawFormatString(150, 0, GetColor(0, 255, 255), "game.timer:%d", game.timer);
+    DrawFormatString(150, 20, GetColor(0, 255, 255), "game.score:%d", game.score);
+    DrawFormatString(150, 40, GetColor(0, 255, 255), "game.deathflg:%d", game.deathflg);
+    DrawFormatString(150, 60, GetColor(0, 255, 255), "game.clearflg:%d", game.clearflg);
 
-    DrawFormatString(300, 0, GetColor(255, 255, 255), "pl.posX:%d", pl.posX);
-    DrawFormatString(300, 20, GetColor(255, 255, 255), "pl.posY:%d", pl.posY);
-    DrawFormatString(300, 40, GetColor(255, 255, 255), "pl.gravity:%d", pl.gravity);
-    DrawFormatString(300, 60, GetColor(255, 255, 255), "pl.gravityflg:%d", pl.gravityflg);
-    DrawFormatString(300, 80, GetColor(255, 255, 255), "pl.grandflg:%d", pl.grandflg);
+    DrawFormatString(300, 0, GetColor(0, 255, 255), "pl.posX:%d", pl.posX);
+    DrawFormatString(300, 20, GetColor(0, 255, 255), "pl.posY:%d", pl.posY);
+    DrawFormatString(300, 40, GetColor(0, 255, 255), "pl.gravity:%d", pl.gravity);
+    DrawFormatString(300, 60, GetColor(0, 255, 255), "pl.gravityflg:%d", pl.gravityflg);
+    DrawFormatString(300, 80, GetColor(0, 255, 255), "pl.grandflg:%d", pl.grandflg);
     //--------------------------------------------------------------------------------------
 }
 
@@ -441,7 +498,14 @@ void player_draw(void)
 {
     if (game.deathflg == false)
     {
-        DrawGraph(GAME_SCREEN_WIDTH / 2, pl.posY, pl.plHND[game.timer / 3 % 5], true);
+        if (pl.gravityflg == true)
+        {
+            DrawGraph(GAME_SCREEN_WIDTH / 2, pl.posY, pl.plHND[game.timer / 3 % 5], true);
+        }
+        else
+        {
+            DrawTurnGraph(GAME_SCREEN_WIDTH / 2, pl.posY, pl.plHND[game.timer / 3 % 5], true);
+        }
     }
     // debug用
     DrawBox(GAME_SCREEN_WIDTH / 2, pl.posY, GAME_SCREEN_WIDTH / 2 + CHIP_SIZE + 1, pl.posY + CHIP_SIZE + 1, GetColor(255, 255, 255), FALSE);
@@ -460,14 +524,22 @@ void retry_draw(void)
     }
 }
 
+//// BGMの再生処理
+//void sound_play(void)
+//{
+//    PlaySoundMem(game.bgmHND, DX_PLAYTYPE_BACK, TRUE);
+//}
+
 // ゲームの終了処理
 void game_end(void)
 {
-	DeleteGraph(game.bgHND);
     for (int i = 0; i < 2; i++)
     {
+        DeleteGraph(game.bgHND[i]);
         DeleteGraph(game.reHND[i]);
     }
+    DeleteSoundMem(game.bgmHND);
+
     stage_end();
     player_end();
 }

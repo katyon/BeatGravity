@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "scene_select.h"
+#include "stage.h"
 
 // 変数 --------------------------------------------------------------------------------------------
 // キー用変数
@@ -14,14 +15,19 @@ extern int nextScene;
 // インスタンス宣言 ---------------------------------------------------------------------------------
 SELECT Select;
 
-
+extern STAGE stage;
 // 関数実体 ----------------------------------------------------------------------------------------
 void select_initialize(void)
 {
+    stage.num = STAGE1;
     Select.state = 0;
     Select.timer = 0;
     Select.transition_flg = false;
     Select.bgHND = LoadGraph("Data\\Images\\select_bg.png");
+    Select.numHND[STAGE1] = LoadGraph("Data\\Images\\select1.png");
+    Select.numHND[STAGE2] = LoadGraph("Data\\Images\\select2.png");
+    Select.numHND[STAGE3] = LoadGraph("Data\\Images\\select3.png");
+    Select.numHND[STAGE4] = LoadGraph("Data\\Images\\select4.png");
 }
 
 void select_update(void)
@@ -55,6 +61,25 @@ void select_update(void)
         if (key_trg[KEY_INPUT_4])nextScene = SCENE_GAME;
         if (key_trg[KEY_INPUT_5])nextScene = SCENE_RESULT;
         //-------------------------------
+
+        if (stage.num < STAGE4)
+        {
+            if (key_trg[KEY_INPUT_RIGHT])
+            {
+                stage.num++;
+            }
+        }
+        if (stage.num > STAGE1)
+        {
+            if (key_trg[KEY_INPUT_LEFT])
+            {
+                stage.num--;
+            }
+        }
+        if (key_trg[KEY_INPUT_SPACE])
+        {
+            nextScene = SCENE_GAME;
+        }
         break;
     }
     Select.timer++;
@@ -63,6 +88,21 @@ void select_update(void)
 void select_draw(void)
 {
     DrawGraph(0, 0, Select.bgHND, false);
+    switch (stage.num)
+    {
+    case STAGE1:
+        DrawGraph(0, 0, Select.numHND[STAGE1], true);
+        break;
+    case STAGE2:
+        DrawGraph(0, 0, Select.numHND[STAGE2], true);
+        break;
+    case STAGE3:
+        DrawGraph(0, 0, Select.numHND[STAGE3], true);
+        break;
+    case STAGE4:
+        DrawGraph(0, 0, Select.numHND[STAGE4], true);
+        break;
+    }
 
     // debug用 ---------------------------------------------------------
     DrawFormatString(0, 0, GetColor(255, 255, 255), "シーン切り替え");

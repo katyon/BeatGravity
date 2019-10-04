@@ -1,4 +1,6 @@
 // インクルード -------------------------------------------------------------------------------------
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "DxLib.h"
 
 #include "common.h"
@@ -48,12 +50,39 @@ int map4[STAGE4_YCONST][STAGE4_XCONST] =
 #pragma endregion
 
 // 関数実体 ----------------------------------------------------------------------------------------
+// ステージの読み込み
+//void LoadMapFile(void)
+//{
+//    FILE *fp;
+//    switch (stage.num)
+//    {
+//    case STAGE1:
+//        fp = fopen("Data\\stage1.txt", "rt");
+//        break;
+//    case STAGE2:
+//        fp = fopen("Data\\stage2.txt", "rt");
+//        break;
+//    case STAGE3:
+//        fp = fopen("Data\\stage3.txt", "rt");
+//        break;
+//    case STAGE4:
+//        fp = fopen("Data\\stage4.txt", "rt");
+//        break;
+//    }
+//    for (int i = 0; i < STAGE_YMAX; i++)
+//    {
+//
+//        for (int j = 0; j <STAGE_XMAX; j++) {
+//            fscanf(fp, "%d", &stage.map_copy[i][j]);
+//        }
+//        fprintf(fp, "\n");
+//    }
+//    fclose(fp);
+//}
+
 // ステージの初期設定
 void stage_initialize(void)
 {
-    // debug用
-    stage.num = STAGE4;
-
     switch (stage.num)
     {
     case STAGE1:
@@ -95,6 +124,32 @@ void stage_initialize(void)
         }
         break;
     }
+    //FILE *fp = 0;
+    //switch (stage.num)
+    //{
+    //case STAGE1:
+    //    fp = fopen("Data\\Stage\\stage1.txt", "rt");
+    //    break;
+    //case STAGE2:
+    //    fp = fopen("Data\\Stage\\stage2.txt", "rt");
+    //    break;
+    //case STAGE3:
+    //    fp = fopen("Data\\Satge\\stage3.txt", "rt");
+    //    break;
+    //case STAGE4:
+    //    fp = fopen("Data\\Stage\\stage4.txt", "rt");
+    //    break;
+    //}
+    //for (int y = 0; y < STAGE_YMAX; y++)
+    //{
+    //    for (int x = 0; x < STAGE_XMAX; x++)
+    //    {
+    //        fscanf(fp, "%d", &stage.map_copy[y][x]);
+    //    }
+    //    fprintf(fp, "\n");
+    //}
+    //fclose(fp);
+
     LoadDivGraph("Data//Images//stage.png", STAGE_ALLNUM, 4, 4, CHIP_SIZE, CHIP_SIZE, stage.chipHND);
 }
 

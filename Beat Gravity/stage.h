@@ -1,8 +1,8 @@
 #pragma once
 // 定数 ----------------------------------------------------------------
 #define STAGE_ALLNUM     (16)
-#define STAGE_XMAX       (256)
-#define STAGE_YMAX       (36)
+#define STAGE_XMAX       (50)
+#define STAGE_YMAX       (20)
 #define STAGE1_XCONST    (16)
 #define STAGE1_YCONST    (9)
 #define STAGE2_XCONST    (16)
@@ -33,6 +33,7 @@ public:
 };
 
 // プロトタイプ宣言 -----------------------------------------------------
+//void LoadMapFile(void);          // ステージの読み込み
 void stage_initialize(void);     // ステージの初期設定
 int detect_chip(int pl_posX, int pl_posY);  // 対応するマップチップの番号を検出
 void stage_draw(void);           // ステージの描画処理

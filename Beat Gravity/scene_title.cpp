@@ -59,7 +59,7 @@ void title_update(void)
         //-------------------------------
         if (key_trg[KEY_INPUT_SPACE])
         {
-            nextScene = SCENE_GAME;
+            nextScene = SCENE_SELECT;
         }
 		break;
 	}

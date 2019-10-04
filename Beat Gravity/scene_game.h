@@ -13,11 +13,16 @@ public:
     int bgposX = 0;                 // 背景X座標
     int bgposY = 0;                 // 背景Y座標
     int bgspeed = 0;                // 背景スクロール速度
+    int alpha1;                     // α値
+    int alpha2;
+    float angle1;                   // 描画角度
+    float angle2;
     bool deathflg = false;          // 死亡：true
     bool clearflg = false;          // ゲームクリア：true
     bool choice = true;             // Yes:true No:false
-	int bgHND = 0;					// 背景のデータハンドル
+    int bgHND[2] = { 0 };		    // 背景のデータハンドル
     int reHND[2] = { 0 };           // リトライ選択用のデータハンドル
+    int bgmHND = 0;                 // BGMサウンドハンドル
 };
 
 class PLAYER
@@ -45,3 +50,5 @@ void player_draw(void);		    	// プレイヤーの描画処理
 void player_end(void);		    	// プレイヤーの終了処理
 
 void retry_draw(void);  // リトライの描画処理
+
+//void sound_play(void);  // BGMの再生処理
