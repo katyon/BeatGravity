@@ -31,6 +31,8 @@ public:
     int state;       // 状態
     int posX;        // X座標
     int posY;        // Y座標
+    int init_posX;   // ゲーム開始時のX座標
+    int init_posY;   // ゲーム開始時のY座標
     int speed;       // X軸方向の速度
     int jumppower;   // ジャンプ力
     int gravity;     // プレイヤーにかかる重力

@@ -62,8 +62,10 @@ void game_initialize(void)
 void player_initialize(void)
 {
     pl.state = 0;
-    pl.posX = GAME_SCREEN_WIDTH / 2;
-    pl.posY = GAME_SCREEN_HEIGHT / 2;
+    pl.init_posX = GAME_SCREEN_WIDTH / 2;
+    pl.init_posY = 750;
+    pl.posX = 0;
+    pl.posY = pl.init_posY + CHIP_SIZE * STAGE_SIZE_Y / 2;
     pl.speed = 13;
     pl.jumppower = 25;
     pl.gravity = GRAVITY;
@@ -96,7 +98,7 @@ void game_update(void)
         game_initialize();
         player_initialize();
         stage_initialize();
-        PlaySoundMem(game.bgmHND, DX_PLAYTYPE_BACK, TRUE);
+        PlaySoundMem(game.bgmHND, DX_PLAYTYPE_BACK, false);
 
         game.state++;
         break;
@@ -120,10 +122,12 @@ void game_update(void)
             if (pl.gravityflg == true)
             {
                 pl.gravityflg = false;
+                pl.init_posY -= 500;
             }
             else
             {
                 pl.gravityflg = true;
+                pl.init_posY += 500;
             }
         }
         if (key_trg[KEY_INPUT_X])
@@ -158,8 +162,8 @@ void game_update(void)
                 }
 
                 // 重力と右移動
-                //pl.posX += pl.speed;
-                //pl.posY += pl.gravity;
+                pl.posX += pl.speed;
+                pl.posY += pl.gravity;
 
                 // マップチップごとの挙動
                 // 無
@@ -215,6 +219,18 @@ void game_update(void)
                     pl.grandflg = true;
                     pl.gravity = 0;
                 }
+                // ジャンプポイント
+                if (detect_chip(pl.posX, pl.posY) == JUMP ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == JUMP ||
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == JUMP ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == JUMP)
+                {
+                    if (key_trg[KEY_INPUT_SPACE])
+                    {
+                        pl.gravity = 0;
+                        pl.gravity -= pl.jumppower;
+                    }
+                }
             }
 #pragma endregion
             // 反転重力
@@ -227,8 +243,8 @@ void game_update(void)
                     pl.gravity -= pl.jumppower;
                 }
                 // 重力と右移動
-                //pl.posY -= pl.gravity;
-                //pl.posX += pl.speed;
+                pl.posY -= pl.gravity;
+                pl.posX += pl.speed;
 
                 // マップチップごとの挙動
                 // 無
@@ -284,20 +300,36 @@ void game_update(void)
                     pl.grandflg = true;
                     pl.gravity = 0;
                 }
+                // ジャンプポイント
+                if (detect_chip(pl.posX, pl.posY) == JUMP ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == JUMP ||
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == JUMP ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == JUMP)
+                {
+                    if (key_trg[KEY_INPUT_SPACE])
+                    {
+                        pl.gravity = 0;
+                        pl.gravity -= pl.jumppower;
+                    }
+                }
             }
 #pragma endregion
             // 共通処理
 #pragma region Common
             // 壁(左)
-            if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == LEFT ||
-                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == LEFT)
+            if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_LEFT ||
+                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == TOP_LEFT ||
+                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == BOTTOM_LEFT ||
+                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_LEFT)
             {
                 // 死亡判定
                 game.deathflg = true;
             }
             // 壁(右)
-            if (detect_chip(pl.posX , pl.posY) == RIGHT ||
-                detect_chip(pl.posX , pl.posY + CHIP_SIZE - 1) == RIGHT)
+            if (detect_chip(pl.posX, pl.posY) == TOP_RIGHT ||
+                detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == TOP_RIGHT ||
+                detect_chip(pl.posX, pl.posY) == BOTTOM_RIGHT ||
+                detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM_RIGHT)
             {
                 // 死亡判定
                 game.deathflg = true;
@@ -307,6 +339,15 @@ void game_update(void)
                 detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == HOLE ||
                 detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == HOLE ||
                 detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == HOLE)
+            {
+                // 死亡判定
+                game.deathflg = true;
+            }
+            // トゲ
+            if (detect_chip(pl.posX, pl.posY) == NEEDLE ||
+                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == NEEDLE ||
+                detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == NEEDLE ||
+                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == NEEDLE)
             {
                 // 死亡判定
                 game.deathflg = true;
@@ -346,30 +387,30 @@ void game_update(void)
         R_flg = true;
 
         // debug用------------------
-        if (key[KEY_INPUT_LEFT])
-        {
-            pl.posX -= pl.speed;
-        }
-        if (key[KEY_INPUT_RIGHT])
-        {
-            pl.posX += pl.speed;
-        }
-        if (key[KEY_INPUT_0])
-        {
-            pl.posX++;
-        }
-        if (key[KEY_INPUT_9])
-        {
-            pl.posY++;
-        }
-        if (key[KEY_INPUT_UP])
-        {
-            pl.posY -= pl.speed;
-        }
-        if (key[KEY_INPUT_DOWN])
-        {
-            pl.posY += pl.speed;
-        }
+        //if (key[KEY_INPUT_LEFT])
+        //{
+        //    pl.posX -= pl.speed;
+        //}
+        //if (key[KEY_INPUT_RIGHT])
+        //{
+        //    pl.posX += pl.speed;
+        //}
+        //if (key[KEY_INPUT_0])
+        //{
+        //    pl.posX++;
+        //}
+        //if (key[KEY_INPUT_9])
+        //{
+        //    pl.posY++;
+        //}
+        //if (key[KEY_INPUT_UP])
+        //{
+        //    pl.posY -= pl.speed;
+        //}
+        //if (key[KEY_INPUT_DOWN])
+        //{
+        //    pl.posY += pl.speed;
+        //}
         if (key_trg[KEY_INPUT_C])
         {
             game.state = POSE;
@@ -381,6 +422,8 @@ void game_update(void)
     case RETRY:
 #pragma region RETRY
         ///// リトライ /////
+        StopSoundMem(game.bgmHND);
+
         if (key_trg[KEY_INPUT_UP])
         {
             game.choice = true;
@@ -402,17 +445,22 @@ void game_update(void)
                 nextScene = SCENE_TITLE;
             }
         }
+
         game.timer--;
         break;
 #pragma endregion
     case POSE:
 #pragma region POSE
+        StopSoundMem(game.bgmHND);
+
         // degug-------------------
         if (key_trg[KEY_INPUT_C])
         {
             game.state = NORMAL;
+            PlaySoundMem(game.bgmHND, DX_PLAYTYPE_BACK, false);
         }
         //-----------------------
+
         game.timer--;
         break;
 #pragma endregion
@@ -457,8 +505,6 @@ void game_draw(void)
     }
     DrawRotaGraph(game.bgposX + GAME_SCREEN_WIDTH / 2, game.bgposY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[1], true, false);
     DrawRotaGraph(game.bgposX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bgposY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[1], true, false);
-    //DrawGraph(game.bgposX, game.bgposY, game.bg2HND, true);
-    //DrawGraph(game.bgposX + GAME_SCREEN_WIDTH, 0, game.bg2HND, true);
 
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
@@ -470,26 +516,38 @@ void game_draw(void)
         retry_draw();
     }
     // debug用 ------------------------------------------------------------------------------
-    DrawFormatString(0, 0, GetColor(0, 255, 255), "シーン切り替え");
-    DrawFormatString(0, 20, GetColor(0, 255, 255), "title:1キー");
-    DrawFormatString(0, 40, GetColor(0, 255, 255), "select:2キー");
-    DrawFormatString(0, 60, GetColor(0, 255, 255), "load:3キー");
-    DrawFormatString(0, 80, GetColor(0, 255, 255), "game:4キー");
-    DrawFormatString(0, 100, GetColor(0, 255, 255), "result:5キー");
-    DrawFormatString(0, 120, GetColor(0, 255, 255), "重力反転:Zキー");
-    DrawFormatString(0, 140, GetColor(0, 255, 255), "リセット:Xキー");
-    DrawFormatString(0, 160, GetColor(0, 255, 255), "ポーズ:Cキー");
-    
-    DrawFormatString(150, 0, GetColor(0, 255, 255), "game.timer:%d", game.timer);
-    DrawFormatString(150, 20, GetColor(0, 255, 255), "game.score:%d", game.score);
-    DrawFormatString(150, 40, GetColor(0, 255, 255), "game.deathflg:%d", game.deathflg);
-    DrawFormatString(150, 60, GetColor(0, 255, 255), "game.clearflg:%d", game.clearflg);
+    unsigned int Cr = GetColor(0, 200, 200);
 
-    DrawFormatString(300, 0, GetColor(0, 255, 255), "pl.posX:%d", pl.posX);
-    DrawFormatString(300, 20, GetColor(0, 255, 255), "pl.posY:%d", pl.posY);
-    DrawFormatString(300, 40, GetColor(0, 255, 255), "pl.gravity:%d", pl.gravity);
-    DrawFormatString(300, 60, GetColor(0, 255, 255), "pl.gravityflg:%d", pl.gravityflg);
-    DrawFormatString(300, 80, GetColor(0, 255, 255), "pl.grandflg:%d", pl.grandflg);
+    DrawFormatString(10, 10, Cr, "シーン切り替え");
+    DrawFormatString(10, 30, Cr, "title:1キー");
+    DrawFormatString(10, 50, Cr, "select:2キー");
+    DrawFormatString(10, 70, Cr, "load:3キー");
+    DrawFormatString(10, 90, Cr, "game:4キー");
+    DrawFormatString(10, 110, Cr, "result:5キー");
+    DrawFormatString(10, 130, Cr, "重力反転:Zキー");
+    DrawFormatString(10, 150, Cr, "リセット:Xキー");
+    DrawFormatString(10, 170, Cr, "ポーズ:Cキー");
+
+    DrawFormatString(140, 10, Cr, "0番は描画しない");
+    DrawFormatString(140, 30, Cr, "13番は崖下(死ぬ)");
+    DrawFormatString(140, 50, Cr, "14番はトゲ(死ぬ)");
+    DrawFormatString(140, 70, Cr, "15番は2段ジャンプ");
+    DrawFormatString(140, 90, Cr, "16番はコイン");
+
+    DrawFormatString(310, 10, Cr, "game.timer:%d", game.timer);
+    DrawFormatString(310, 30, Cr, "game.score:%d", game.score);
+    DrawFormatString(310, 50, Cr, "game.deathflg:%d", game.deathflg);
+    DrawFormatString(310, 70, Cr, "game.clearflg:%d", game.clearflg);
+
+    DrawFormatString(460, 10, Cr, "pl.posX:%d", pl.posX);
+    DrawFormatString(460, 30, Cr, "pl.posY:%d", pl.posY);
+    DrawFormatString(460, 50, Cr, "pl.gravity:%d", pl.gravity);
+    DrawFormatString(460, 70, Cr, "pl.gravityflg:%d", pl.gravityflg);
+    DrawFormatString(460, 90, Cr, "pl.grandflg:%d", pl.grandflg);
+
+    DrawFormatString(610, 10, Cr, "現在のプレイヤーの位置(マップチップ数)");
+    DrawFormatString(610, 30, Cr, "X:%d", pl.posX / CHIP_SIZE);
+    DrawFormatString(610, 50, Cr, "Y:%d", pl.posY / CHIP_SIZE);
     //--------------------------------------------------------------------------------------
 }
 
@@ -500,15 +558,17 @@ void player_draw(void)
     {
         if (pl.gravityflg == true)
         {
-            DrawGraph(GAME_SCREEN_WIDTH / 2, pl.posY, pl.plHND[game.timer / 3 % 5], true);
+            DrawGraph(pl.init_posX, pl.init_posY, pl.plHND[game.timer / 3 % 5], true);
+            // debug用
+            DrawBox(pl.init_posX, pl.init_posY, pl.init_posX + CHIP_SIZE + 1, pl.init_posY + CHIP_SIZE + 1, GetColor(255, 255, 255), FALSE);
         }
         else
         {
-            DrawTurnGraph(GAME_SCREEN_WIDTH / 2, pl.posY, pl.plHND[game.timer / 3 % 5], true);
+            DrawGraph(pl.init_posX, pl.init_posY, pl.plHND[game.timer / 3 % 5], true);
+            // debug用
+            DrawBox(pl.init_posX, pl.init_posY, pl.init_posX + CHIP_SIZE + 1, pl.init_posY + CHIP_SIZE + 1, GetColor(255, 255, 255), FALSE);
         }
     }
-    // debug用
-    DrawBox(GAME_SCREEN_WIDTH / 2, pl.posY, GAME_SCREEN_WIDTH / 2 + CHIP_SIZE + 1, pl.posY + CHIP_SIZE + 1, GetColor(255, 255, 255), FALSE);
 }
 
 // リトライの描画処理

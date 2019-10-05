@@ -1,16 +1,16 @@
 #pragma once
 // 定数 ----------------------------------------------------------------
-#define STAGE_ALLNUM     (16)
-#define STAGE_XMAX       (256)
-#define STAGE_YMAX       (30)
-#define STAGE1_XCONST    (16)
-#define STAGE1_YCONST    (9)
-#define STAGE2_XCONST    (16)
-#define STAGE2_YCONST    (9)
-#define STAGE3_XCONST    (16)
-#define STAGE3_YCONST    (9)
-#define STAGE4_XCONST    (64)
-#define STAGE4_YCONST    (18)
+#define STAGE_ALLNUM       (25)
+#define STAGE_SIZE_X       (1700)
+#define STAGE_SIZE_Y       (54)
+//#define STAGE1_XCONST    (16)
+//#define STAGE1_YCONST    (9)
+//#define STAGE2_XCONST    (16)
+//#define STAGE2_YCONST    (9)
+//#define STAGE3_XCONST    (16)
+//#define STAGE3_YCONST    (9)
+//#define STAGE4_XCONST    (64)
+//#define STAGE4_YCONST    (18)
 
 enum STAGENUM
 {
@@ -19,8 +19,9 @@ enum STAGENUM
 
 enum CHIP
 {
-    EMPTY, TOP, BOTTOM, LEFT, RIGHT, TOP_LCORNER, TOP_RCORNER, BOTTOM_LCORNER, BOTTOM_RCORNER, INSIDE,
-    HOLE, COIN
+    EMPTY, TOP, BOTTOM, TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT,BOTTOM_RIGHT,
+    TOP_LCORNER, TOP_RCORNER, BOTTOM_LCORNER, BOTTOM_RCORNER, TOP_INSIDE, BOTTOM_INSIDE,
+    HOLE, NEEDLE, JUMP, COIN
 };
 
 // クラス --------------------------------------------------------------
@@ -28,7 +29,7 @@ class STAGE
 {
 public:
     int num;                                        // ステージナンバー
-    int map_copy[STAGE_YMAX][STAGE_XMAX] = { 0 };   // 各ステージのコピー
+    int map_copy[STAGE_SIZE_Y][STAGE_SIZE_X] = { 0 };   // 各ステージのコピー
     int chipHND[STAGE_ALLNUM];                      // マップチップのグラフィックハンドル
 };
 

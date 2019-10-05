@@ -33,26 +33,26 @@ extern PLAYER pl;
 // ステージの読み込み
 void load_mapFile(void)
 {
-    FILE *fp;
+    FILE *fp = 0;
     switch (stage.num)
     {
     case STAGE1:
-        fp = fopen("Data\\stage1.txt", "rt");
+        fp = fopen("Data\\Stages\\stage1.txt", "rt");
         break;
     case STAGE2:
-        fp = fopen("Data\\stage2.txt", "rt");
+        fp = fopen("Data\\Stages\\stage2.txt", "rt");
         break;
     case STAGE3:
-        fp = fopen("Data\\stage3.txt", "rt");
+        fp = fopen("Data\\Stages\\stage3.txt", "rt");
         break;
     case STAGE4:
-        fp = fopen("Data\\stage4.txt", "rt");
+        fp = fopen("Data\\Stages\\stage4.txt", "rt");
         break;
     }
-    for (int i = 0; i < STAGE_YMAX; i++)
+    for (int i = 0; i < STAGE_SIZE_Y; i++)
     {
 
-        for (int j = 0; j <STAGE_XMAX; j++) {
+        for (int j = 0; j <STAGE_SIZE_X; j++) {
             fscanf(fp, "%d", &stage.map_copy[i][j]);
         }
         fprintf(fp, "\n");
@@ -63,51 +63,10 @@ void load_mapFile(void)
 // ステージの初期設定
 void stage_initialize(void)
 {
-//    switch (stage.num)
-//    {
-//    case STAGE1:
-//        for (int x = 0; x < STAGE_XMAX; x++)
-//        {
-//            for (int y = 0; y < STAGE_YMAX; y++)
-//            {
-//                stage.map_copy[y][x] = map1[y][x];
-//            }
-//        }
-//        break;
-//    case STAGE2:
-//        for (int x = 0; x < STAGE_XMAX; x++)
-//        {
-//            for (int y = 0; y < STAGE_YMAX; y++)
-//            {
-//                stage.map_copy[y][x] = map2[y][x];
-//            }
-//        }
-//        break;
-//    case STAGE3:
-//        for (int x = 0; x < STAGE_XMAX; x++)
-//        {
-//            for (int y = 0; y < STAGE_YMAX; y++)
-//            {
-//                stage.map_copy[y][x] = map3[y][x];
-//            }
-//        }
-//        break;
-//
-//        // debug用
-//    case STAGE4:
-//        for (int x = 0; x < STAGE_XMAX; x++)
-//        {
-//            for (int y = 0; y < STAGE_YMAX; y++)
-//            {
-//                stage.map_copy[y][x] = map4[y][x];
-//            }
-//        }
-//        break;
-//    }
 
     load_mapFile();
 
-    LoadDivGraph("Data//Images//stage.png", STAGE_ALLNUM, 4, 4, CHIP_SIZE, CHIP_SIZE, stage.chipHND);
+    LoadDivGraph("Data//Images//stage.png", STAGE_ALLNUM, 5, 5, CHIP_SIZE, CHIP_SIZE, stage.chipHND);
 }
 
 // 対応するマップチップの番号を検出
@@ -119,48 +78,20 @@ int detect_chip(int pl_posX, int pl_posY)
 // ステージの描画処理
 void stage_draw(void)
 {
-    for (int y = 0; y < STAGE_YMAX; y++)
+    for (int y = 0; y < STAGE_SIZE_Y; y++)
     {
-        for (int x = 0; x < STAGE_XMAX; x++)
+        for (int x = 0; x < STAGE_SIZE_X; x++)
         {
-            switch (stage.map_copy[y][x])
+            if (stage.map_copy[y][x] != EMPTY)
             {
-            //case EMPTY:
-            //    DrawGraph(CHIP_SIZE * x - pl.posX + GAME_SCREEN_WIDTH / 2, CHIP_SIZE * y, stage.chipHND[EMPTY], true);
-            //    break;
-            case TOP:
-                DrawGraph(CHIP_SIZE * x - pl.posX + GAME_SCREEN_WIDTH / 2, CHIP_SIZE * y, stage.chipHND[TOP], true);
-                break;
-            case BOTTOM:
-                DrawGraph(CHIP_SIZE * x - pl.posX + GAME_SCREEN_WIDTH / 2, CHIP_SIZE * y, stage.chipHND[BOTTOM], true);
-                break;
-            case LEFT:
-                DrawGraph(CHIP_SIZE * x - pl.posX + GAME_SCREEN_WIDTH / 2, CHIP_SIZE * y, stage.chipHND[LEFT], true);
-                break;
-            case RIGHT:
-                DrawGraph(CHIP_SIZE * x - pl.posX + GAME_SCREEN_WIDTH / 2, CHIP_SIZE * y, stage.chipHND[RIGHT], true);
-                break;
-            case TOP_LCORNER:
-                DrawGraph(CHIP_SIZE * x - pl.posX + GAME_SCREEN_WIDTH / 2, CHIP_SIZE * y, stage.chipHND[TOP_LCORNER], true);
-                break;
-            case TOP_RCORNER:
-                DrawGraph(CHIP_SIZE * x - pl.posX + GAME_SCREEN_WIDTH / 2, CHIP_SIZE * y, stage.chipHND[TOP_RCORNER], true);
-                break;
-            case BOTTOM_LCORNER:
-                DrawGraph(CHIP_SIZE * x - pl.posX + GAME_SCREEN_WIDTH / 2, CHIP_SIZE * y, stage.chipHND[BOTTOM_LCORNER], true);
-                break;
-            case BOTTOM_RCORNER:
-                DrawGraph(CHIP_SIZE * x - pl.posX + GAME_SCREEN_WIDTH / 2, CHIP_SIZE * y, stage.chipHND[BOTTOM_RCORNER], true);
-                break;
-            case INSIDE:
-                DrawGraph(CHIP_SIZE * x - pl.posX + GAME_SCREEN_WIDTH / 2, CHIP_SIZE * y, stage.chipHND[INSIDE], true);
-                break;
-            case HOLE:
-                DrawGraph(CHIP_SIZE * x - pl.posX + GAME_SCREEN_WIDTH / 2, CHIP_SIZE * y, stage.chipHND[HOLE], true);
-                break;
-            case COIN:
-                DrawGraph(CHIP_SIZE * x - pl.posX + GAME_SCREEN_WIDTH / 2, CHIP_SIZE * y, stage.chipHND[COIN], true);
-                break;
+                if (pl.gravityflg == true)
+                {
+                    DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.chipHND[stage.map_copy[y][x]], true);
+                }
+                else
+                {
+                    DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.chipHND[stage.map_copy[y][x]], true);
+                }
             }
         }
     }
