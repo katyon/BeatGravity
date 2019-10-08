@@ -63,9 +63,9 @@ void player_initialize(void)
 {
     pl.state = 0;
     pl.init_posX = GAME_SCREEN_WIDTH / 2;
-    pl.init_posY = 750;
+    pl.init_posY = 840;
     pl.posX = 0;
-    pl.posY = pl.init_posY + CHIP_SIZE * STAGE_SIZE_Y / 2;
+    pl.posY = pl.init_posY + CHIP_SIZE * STAGE_SIZE_Y / 3;
     pl.speed = 13;
     pl.jumppower = 25;
     pl.gravity = GRAVITY;
@@ -179,7 +179,9 @@ void game_update(void)
                 }
                 // ínè„
                 if (detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM)
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM ||
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM_AIR ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_AIR)
                 {
                     // à⁄ìÆêßå¿
                     pl.posY = pl.posY / CHIP_SIZE * CHIP_SIZE;
@@ -189,13 +191,17 @@ void game_update(void)
                 }
                 // äp(ç∂)
                 if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == BOTTOM_LCORNER ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 31) == BOTTOM_LCORNER)
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 31) == BOTTOM_LCORNER ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == BOTTOM_LAIR ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 31) == BOTTOM_LAIR)
                 {
                     // éÄñSîªíË
                     game.deathflg = true;
                 }
                 else if (detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM_LCORNER ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_LCORNER)
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_LCORNER ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == BOTTOM_LAIR ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 31) == BOTTOM_LAIR)
                 {
                     // à⁄ìÆêßå¿
                     pl.posY = pl.posY / CHIP_SIZE * CHIP_SIZE;
@@ -205,13 +211,17 @@ void game_update(void)
                 }
                 // äp(âE)
                 if (detect_chip(pl.posX, pl.posY) == BOTTOM_RCORNER ||
-                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 31) == BOTTOM_RCORNER)
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 31) == BOTTOM_RCORNER ||
+                    detect_chip(pl.posX, pl.posY) == BOTTOM_RAIR ||
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 31) == BOTTOM_RAIR)
                 {
                     // éÄñSîªíË
                     game.deathflg = true;
                 }
                 else if (detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM_RCORNER ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_RCORNER)
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_RCORNER ||
+                    detect_chip(pl.posX, pl.posY) == BOTTOM_RAIR ||
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 31) == BOTTOM_RAIR)
                 {
                     // à⁄ìÆêßå¿
                     pl.posY = pl.posY / CHIP_SIZE * CHIP_SIZE;
@@ -260,7 +270,9 @@ void game_update(void)
                 }
                 // ìVà‰
                 if (detect_chip(pl.posX, pl.posY) == TOP ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP)
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP ||
+                    detect_chip(pl.posX, pl.posY) == TOP_AIR ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_AIR)
                 {
                     // à⁄ìÆêßå¿
                     pl.posY = pl.posY / CHIP_SIZE * CHIP_SIZE + CHIP_SIZE;
@@ -269,14 +281,18 @@ void game_update(void)
                     pl.gravity = 0;
                 }
                 // äp(ç∂)
-                if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + 30) == TOP_LCORNER || 
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE) == TOP_LCORNER)
+                if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + 30) == TOP_LCORNER ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE) == TOP_LCORNER ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + 30) == TOP_LAIR ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE) == TOP_LAIR)
                 {
                     // éÄñSîªíË
                     game.deathflg = true;
                 }
                 else if (detect_chip(pl.posX, pl.posY) == TOP_LCORNER ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_LCORNER)
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_LCORNER ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + 30) == TOP_LAIR ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE) == TOP_LAIR)
                 {
                     // à⁄ìÆêßå¿
                     pl.posY = pl.posY / CHIP_SIZE * CHIP_SIZE + CHIP_SIZE;
@@ -286,13 +302,17 @@ void game_update(void)
                 }
                 // äp(âE)
                 if (detect_chip(pl.posX, pl.posY + 30) == TOP_RCORNER ||
-                    detect_chip(pl.posX, pl.posY + CHIP_SIZE) == TOP_RCORNER)
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE) == TOP_RCORNER ||
+                    detect_chip(pl.posX, pl.posY + 30) == TOP_RAIR ||
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE) == TOP_RAIR)
                 {
                     // éÄñSîªíË
                     game.deathflg = true;
                 }
                 else if (detect_chip(pl.posX, pl.posY) == TOP_RCORNER ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_RCORNER)
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_RCORNER ||
+                    detect_chip(pl.posX, pl.posY + 30) == TOP_RAIR ||
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE) == TOP_RAIR)
                 {
                     // à⁄ìÆêßå¿
                     pl.posY = pl.posY / CHIP_SIZE * CHIP_SIZE + CHIP_SIZE;
@@ -529,10 +549,10 @@ void game_draw(void)
     DrawFormatString(10, 170, Cr, "É|Å[ÉY:CÉLÅ[");
 
     DrawFormatString(140, 10, Cr, "0î‘ÇÕï`âÊÇµÇ»Ç¢");
-    DrawFormatString(140, 30, Cr, "13î‘ÇÕäRâ∫(éÄÇ )");
-    DrawFormatString(140, 50, Cr, "14î‘ÇÕÉgÉQ(éÄÇ )");
-    DrawFormatString(140, 70, Cr, "15î‘ÇÕ2íiÉWÉÉÉìÉv");
-    DrawFormatString(140, 90, Cr, "16î‘ÇÕÉRÉCÉì");
+    DrawFormatString(140, 30, Cr, "20î‘ÇÕäRâ∫(éÄÇ )");
+    DrawFormatString(140, 50, Cr, "21î‘ÇÕÉgÉQ(éÄÇ )");
+    DrawFormatString(140, 70, Cr, "22î‘ÇÕ2íiÉWÉÉÉìÉv");
+    DrawFormatString(140, 90, Cr, "23î‘ÇÕÉRÉCÉì");
 
     DrawFormatString(310, 10, Cr, "game.timer:%d", game.timer);
     DrawFormatString(310, 30, Cr, "game.score:%d", game.score);

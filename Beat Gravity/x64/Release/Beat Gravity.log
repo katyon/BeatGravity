@@ -1,8 +1,3 @@
 ﻿  scene_game.cpp
-scene_game.cpp(482): warning C4305: '=': 'double' から 'float' へ切り詰めます。
-  コード生成しています。
-  2 of 51 functions ( 3.9%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    2 functions had inline decision re-evaluated but remain unchanged
-  コード生成が終了しました。
-  Beat Gravity.vcxproj -> C:\Users\21900162\Documents\BeatGravity\Beat Gravity\x64\Release\Beat Gravity.exe
+scene_game.cpp(502): warning C4305: '=': 'double' から 'float' へ切り詰めます。
+LINK : fatal error LNK1104: ファイル 'C:\Users\21900162\Documents\BeatGravity\Beat Gravity\x64\Release\Beat Gravity.exe' を開くことができません。
