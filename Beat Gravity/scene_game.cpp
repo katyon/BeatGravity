@@ -230,16 +230,27 @@ void game_update(void)
                     pl.gravity = 0;
                 }
                 // ジャンプポイント
-                if (detect_chip(pl.posX, pl.posY) == JUMP ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == JUMP ||
-                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == JUMP ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == JUMP)
+                if (detect_chip(pl.posX, pl.posY) == AIRJUMP ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == AIRJUMP ||
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == AIRJUMP ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == AIRJUMP)
                 {
                     if (key_trg[KEY_INPUT_SPACE])
                     {
                         pl.gravity = 0;
                         pl.gravity -= pl.jumppower;
                     }
+                }
+                // ジャンプパッド
+                if (detect_chip(pl.posX, pl.posY + 12) == BOTTOM_JUMPPAD)
+                {
+                    pl.gravity = 0;
+                    pl.gravity -= pl.jumppower + 10;
+                }
+                if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + 12) == BOTTOM_JUMPPAD)
+                {
+                    pl.gravity = 0;
+                    pl.gravity -= pl.jumppower + 10;
                 }
             }
 #pragma endregion
@@ -321,16 +332,27 @@ void game_update(void)
                     pl.gravity = 0;
                 }
                 // ジャンプポイント
-                if (detect_chip(pl.posX, pl.posY) == JUMP ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == JUMP ||
-                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == JUMP ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == JUMP)
+                if (detect_chip(pl.posX, pl.posY) == AIRJUMP ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == AIRJUMP ||
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == AIRJUMP ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == AIRJUMP)
                 {
                     if (key_trg[KEY_INPUT_SPACE])
                     {
                         pl.gravity = 0;
                         pl.gravity -= pl.jumppower;
                     }
+                }
+                // ジャンプパッド
+                if (detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1 - 12) == TOP_JUMPPAD)
+                {
+                    pl.gravity = 0;
+                    pl.gravity -= pl.jumppower + 10;
+                }
+                if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1 - 12) == TOP_JUMPPAD)
+                {
+                    pl.gravity = 0;
+                    pl.gravity -= pl.jumppower + 10;
                 }
             }
 #pragma endregion
@@ -364,10 +386,14 @@ void game_update(void)
                 game.deathflg = true;
             }
             // トゲ
-            if (detect_chip(pl.posX, pl.posY) == NEEDLE ||
-                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == NEEDLE ||
-                detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == NEEDLE ||
-                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == NEEDLE)
+            if (detect_chip(pl.posX, pl.posY) == BOTTOM_NEEDLE ||
+                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == BOTTOM_NEEDLE ||
+                detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM_NEEDLE ||
+                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_NEEDLE ||
+                detect_chip(pl.posX, pl.posY) == TOP_NEEDLE ||
+                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_NEEDLE ||
+                detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == TOP_NEEDLE ||
+                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == TOP_NEEDLE)
             {
                 // 死亡判定
                 game.deathflg = true;
@@ -392,6 +418,15 @@ void game_update(void)
             {
                 stage.map_copy[(pl.posY + CHIP_SIZE - 1) / CHIP_SIZE][(pl.posX + CHIP_SIZE - 1) / CHIP_SIZE] = EMPTY;
                 game.score += SCORE_COIN;
+            }
+            // ゴール
+            if (detect_chip(pl.posX, pl.posY) == GOAL ||
+                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == GOAL ||
+                detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == GOAL ||
+                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == GOAL)
+            {
+                // クリア判定
+                game.clearflg = true;
             }
 
             // 背景スクロール処理
@@ -549,10 +584,10 @@ void game_draw(void)
     DrawFormatString(10, 170, Cr, "ポーズ:Cキー");
 
     DrawFormatString(140, 10, Cr, "0番は描画しない");
-    DrawFormatString(140, 30, Cr, "20番は崖下(死ぬ)");
-    DrawFormatString(140, 50, Cr, "21番はトゲ(死ぬ)");
-    DrawFormatString(140, 70, Cr, "22番は2段ジャンプ");
-    DrawFormatString(140, 90, Cr, "23番はコイン");
+    DrawFormatString(140, 30, Cr, "22番は崖下(死ぬ)");
+    DrawFormatString(140, 50, Cr, "25番は2段ジャンプ");
+    DrawFormatString(140, 70, Cr, "28番はコイン");
+    DrawFormatString(140, 90, Cr, "29番はゴール");
 
     DrawFormatString(310, 10, Cr, "game.timer:%d", game.timer);
     DrawFormatString(310, 30, Cr, "game.score:%d", game.score);

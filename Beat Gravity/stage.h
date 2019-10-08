@@ -1,6 +1,6 @@
 #pragma once
 // íËêî ----------------------------------------------------------------
-#define STAGE_ALLNUM       (25)
+#define STAGE_ALLNUM       (36)
 #define STAGE_SIZE_X       (1700)
 #define STAGE_SIZE_Y       (54)
 //#define STAGE1_XCONST    (16)
@@ -20,8 +20,8 @@ enum STAGENUM
 enum CHIP
 {
     EMPTY, BOTTOM, BOTTOM_LCORNER, BOTTOM_RCORNER, BOTTOM_INSIDE, BOTTOM_LEFT, BOTTOM_RIGHT, BOTTOM_AIR, BOTTOM_LAIR, BOTTOM_RAIR,
-    TOP, TOP_LCORNER, TOP_RCORNER, TOP_INSIDE, TOP_LEFT, TOP_RIGHT, TOP_AIR, TOP_LAIR, TOP_RAIR, DARK,
-    HOLE, NEEDLE, JUMP, COIN
+    TOP, TOP_LCORNER, TOP_RCORNER, TOP_INSIDE, TOP_LEFT, TOP_RIGHT, TOP_AIR, TOP_LAIR, TOP_RAIR, DARK, LDARK, RDARK,
+    HOLE, BOTTOM_NEEDLE, TOP_NEEDLE, AIRJUMP, BOTTOM_JUMPPAD, TOP_JUMPPAD, COIN, GOAL
 };
 
 // ÉNÉâÉX --------------------------------------------------------------

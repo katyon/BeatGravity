@@ -65,7 +65,7 @@ void stage_initialize(void)
 {
     load_mapFile();
 
-    LoadDivGraph("Data//Images//stage.png", STAGE_ALLNUM, 5, 5, CHIP_SIZE, CHIP_SIZE, stage.chipHND);
+    LoadDivGraph("Data//Images//stage.png", STAGE_ALLNUM, 6, 6, CHIP_SIZE, CHIP_SIZE, stage.chipHND);
 }
 
 // 対応するマップチップの番号を検出
