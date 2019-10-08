@@ -1,13 +1,8 @@
-﻿  ranking.cpp
-  scene_load.cpp
-  scene_game.cpp
+﻿  scene_game.cpp
 scene_game.cpp(482): warning C4305: '=': 'double' から 'float' へ切り詰めます。
-  main.cpp
-  scene_result.cpp
-  scene_select.cpp
-  scene_title.cpp
-  stage.cpp
   コード生成しています。
-  All 51 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  2 of 51 functions ( 3.9%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    2 functions had inline decision re-evaluated but remain unchanged
   コード生成が終了しました。
   Beat Gravity.vcxproj -> C:\Users\21900162\Documents\BeatGravity\Beat Gravity\x64\Release\Beat Gravity.exe

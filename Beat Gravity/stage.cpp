@@ -63,7 +63,6 @@ void load_mapFile(void)
 // ステージの初期設定
 void stage_initialize(void)
 {
-
     load_mapFile();
 
     LoadDivGraph("Data//Images//stage.png", STAGE_ALLNUM, 5, 5, CHIP_SIZE, CHIP_SIZE, stage.chipHND);
