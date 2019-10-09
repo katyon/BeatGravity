@@ -26,9 +26,12 @@ void game_initialize(void)
 	game.state = 0;
 	game.timer = 0;
     game.score = 0;
-    game.bgposX = 0;
-    game.bgposY = 0;
-    game.bgspeed = 1;
+    game.bg1posX = 0;
+    game.bg1posY = 0;
+    game.bg1speed = 1;
+    game.bg2posX = 0;
+    game.bg2posY = 0;
+    game.bg2speed = 2;
     game.alpha1 = 0;
     game.alpha2 = 0;
     game.angle1 = 0;
@@ -36,8 +39,10 @@ void game_initialize(void)
     game.deathflg = false;
     game.clearflg = false;
     game.choice = true;
-    game.bgHND[0] = LoadGraph("Data\\Images\\game_bg1.png");
-    game.bgHND[1] = LoadGraph("Data\\Images\\game_bg2.png");
+    game.bgHND[0] = LoadGraph("Data\\Images\\game_bg1W.png");
+    game.bgHND[1] = LoadGraph("Data\\Images\\game_bg2W.png");
+    game.bgHND[2] = LoadGraph("Data\\Images\\game_bg1R.png");
+    game.bgHND[3] = LoadGraph("Data\\Images\\game_bg2R.png");
     game.reHND[0] = LoadGraph("Data\\Images\\retry_yes.png");
     game.reHND[1] = LoadGraph("Data\\Images\\retry_no.png");
 
@@ -122,12 +127,12 @@ void game_update(void)
             if (pl.gravityflg == true)
             {
                 pl.gravityflg = false;
-                pl.init_posY -= 500;
+                pl.init_posY -= 660;
             }
             else
             {
                 pl.gravityflg = true;
-                pl.init_posY += 500;
+                pl.init_posY += 660;
             }
         }
         if (key_trg[KEY_INPUT_X])
@@ -200,8 +205,8 @@ void game_update(void)
                 }
                 else if (detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM_LCORNER ||
                     detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_LCORNER ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == BOTTOM_LAIR ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 31) == BOTTOM_LAIR)
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM_LAIR ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_LAIR)
                 {
                     // à⁄ìÆêßå¿
                     pl.posY = pl.posY / CHIP_SIZE * CHIP_SIZE;
@@ -220,8 +225,8 @@ void game_update(void)
                 }
                 else if (detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM_RCORNER ||
                     detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_RCORNER ||
-                    detect_chip(pl.posX, pl.posY) == BOTTOM_RAIR ||
-                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 31) == BOTTOM_RAIR)
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM_RAIR ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_RAIR)
                 {
                     // à⁄ìÆêßå¿
                     pl.posY = pl.posY / CHIP_SIZE * CHIP_SIZE;
@@ -302,8 +307,8 @@ void game_update(void)
                 }
                 else if (detect_chip(pl.posX, pl.posY) == TOP_LCORNER ||
                     detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_LCORNER ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + 30) == TOP_LAIR ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE) == TOP_LAIR)
+                    detect_chip(pl.posX, pl.posY) == TOP_LAIR ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_LAIR)
                 {
                     // à⁄ìÆêßå¿
                     pl.posY = pl.posY / CHIP_SIZE * CHIP_SIZE + CHIP_SIZE;
@@ -322,8 +327,8 @@ void game_update(void)
                 }
                 else if (detect_chip(pl.posX, pl.posY) == TOP_RCORNER ||
                     detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_RCORNER ||
-                    detect_chip(pl.posX, pl.posY + 30) == TOP_RAIR ||
-                    detect_chip(pl.posX, pl.posY + CHIP_SIZE) == TOP_RAIR)
+                    detect_chip(pl.posX, pl.posY) == TOP_RAIR ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_RAIR)
                 {
                     // à⁄ìÆêßå¿
                     pl.posY = pl.posY / CHIP_SIZE * CHIP_SIZE + CHIP_SIZE;
@@ -386,10 +391,10 @@ void game_update(void)
                 game.deathflg = true;
             }
             // ÉgÉQ
-            if (detect_chip(pl.posX, pl.posY) == BOTTOM_NEEDLE ||
-                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == BOTTOM_NEEDLE ||
-                detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM_NEEDLE ||
-                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_NEEDLE ||
+            if (detect_chip(pl.posX + 10, pl.posY + 10) == BOTTOM_NEEDLE ||
+                detect_chip(pl.posX + CHIP_SIZE - 1 - 10, pl.posY + 10) == BOTTOM_NEEDLE ||
+                detect_chip(pl.posX + 10, pl.posY + CHIP_SIZE - 1 - 10) == BOTTOM_NEEDLE ||
+                detect_chip(pl.posX + CHIP_SIZE - 1 - 10, pl.posY + CHIP_SIZE - 1 - 10) == BOTTOM_NEEDLE ||
                 detect_chip(pl.posX, pl.posY) == TOP_NEEDLE ||
                 detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_NEEDLE ||
                 detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == TOP_NEEDLE ||
@@ -430,10 +435,15 @@ void game_update(void)
             }
 
             // îwåiÉXÉNÉçÅ[Éãèàóù
-            game.bgposX -= game.bgspeed;
-            if (game.bgposX + GAME_SCREEN_WIDTH < 0)
+            game.bg1posX -= game.bg1speed;
+            if (game.bg1posX + GAME_SCREEN_WIDTH < 0)
             {
-                game.bgposX = 0;
+                game.bg1posX = 0;
+            }
+            game.bg2posX -= game.bg2speed;
+            if (game.bg2posX + GAME_SCREEN_WIDTH < 0)
+            {
+                game.bg2posX = 0;
             }
         }
 #pragma endregion
@@ -442,30 +452,30 @@ void game_update(void)
         R_flg = true;
 
         // debugóp------------------
-        //if (key[KEY_INPUT_LEFT])
-        //{
-        //    pl.posX -= pl.speed;
-        //}
-        //if (key[KEY_INPUT_RIGHT])
-        //{
-        //    pl.posX += pl.speed;
-        //}
-        //if (key[KEY_INPUT_0])
-        //{
-        //    pl.posX++;
-        //}
-        //if (key[KEY_INPUT_9])
-        //{
-        //    pl.posY++;
-        //}
-        //if (key[KEY_INPUT_UP])
-        //{
-        //    pl.posY -= pl.speed;
-        //}
-        //if (key[KEY_INPUT_DOWN])
-        //{
-        //    pl.posY += pl.speed;
-        //}
+        if (key[KEY_INPUT_LEFT])
+        {
+            pl.posX -= pl.speed;
+        }
+        if (key[KEY_INPUT_RIGHT])
+        {
+            pl.posX += pl.speed;
+        }
+        if (key[KEY_INPUT_0])
+        {
+            pl.posX++;
+        }
+        if (key[KEY_INPUT_9])
+        {
+            pl.posY++;
+        }
+        if (key[KEY_INPUT_UP])
+        {
+            pl.posY -= pl.speed;
+        }
+        if (key[KEY_INPUT_DOWN])
+        {
+            pl.posY += pl.speed;
+        }
         if (key_trg[KEY_INPUT_C])
         {
             game.state = POSE;
@@ -536,8 +546,10 @@ void game_draw(void)
     {
         game.angle1 = PI;
     }
-    DrawRotaGraph(game.bgposX + GAME_SCREEN_WIDTH / 2, game.bgposY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[0], true, false);
-    DrawRotaGraph(game.bgposX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bgposY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[0], true, false);
+    DrawRotaGraph(game.bg1posX + GAME_SCREEN_WIDTH / 2, game.bg1posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[0], true, false);
+    DrawRotaGraph(game.bg1posX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bg1posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[0], true, false);
+    DrawRotaGraph(game.bg2posX + GAME_SCREEN_WIDTH / 2, game.bg2posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[1], true, false);
+    DrawRotaGraph(game.bg2posX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bg2posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[1], true, false);
     if (pl.gravityflg == true)
     {
         game.alpha1 = 0;
@@ -558,8 +570,10 @@ void game_draw(void)
             game.alpha1 += 5;
         }
     }
-    DrawRotaGraph(game.bgposX + GAME_SCREEN_WIDTH / 2, game.bgposY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[1], true, false);
-    DrawRotaGraph(game.bgposX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bgposY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[1], true, false);
+    DrawRotaGraph(game.bg1posX + GAME_SCREEN_WIDTH / 2, game.bg1posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[2], true, false);
+    DrawRotaGraph(game.bg1posX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bg1posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[2], true, false);
+    DrawRotaGraph(game.bg2posX + GAME_SCREEN_WIDTH / 2, game.bg2posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[3], true, false);
+    DrawRotaGraph(game.bg2posX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bg2posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[3], true, false);
 
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
@@ -648,6 +662,10 @@ void retry_draw(void)
 // ÉQÅ[ÉÄÇÃèIóπèàóù
 void game_end(void)
 {
+    for (int i = 0; i < 4; i++)
+    {
+        DeleteGraph(game.bgHND[i]);
+    }
     for (int i = 0; i < 2; i++)
     {
         DeleteGraph(game.bgHND[i]);
