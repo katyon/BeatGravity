@@ -8,6 +8,8 @@ public:
 	int state = 0;					// 状態
 	int timer = 0;					// タイマー
 	int bgHND = 0;					// 背景のデータハンドル
+    int BGM = 0;
+    int decideSE = 0;              // 決定音
 	bool transition_flg = false;	// シーン遷移用のフラグ
 };
 

@@ -25,6 +25,7 @@ void result_initialize(void)
     result.timer = 0;
     result.transition_flg = false;
     result.bgHND = LoadGraph("Data\\Images\\result_bg.png");
+    result.BGM = LoadSoundMem("Data\\Sounds\\resultBGM.ogg");
 }
 
 void result_update(void)
@@ -46,7 +47,7 @@ void result_update(void)
     {
     case INIT:
         ///// ‰Šúİ’è /////
-        result.state++;
+        result.state = NORMAL;
         break;
 
     case NORMAL:

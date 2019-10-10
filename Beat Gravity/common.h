@@ -15,5 +15,5 @@ enum SCENE_CASE
 // stateópíËêî
 enum STATE
 {
-    INIT, NORMAL, RETRY, NEXT, POSE
+    INIT, NORMAL, NEXT, RETRY, POSE
 };

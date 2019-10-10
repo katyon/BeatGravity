@@ -9,6 +9,8 @@ public:
     int timer = 0;					// タイマー
     int bgHND = 0;					// 背景のデータハンドル
     int numHND[4] = { 0 };          // select用ハンドル
+    int decideSE = 0;
+    int choiceSE = 0;
     bool transition_flg = false;	// シーン遷移用のフラグ
 };
 

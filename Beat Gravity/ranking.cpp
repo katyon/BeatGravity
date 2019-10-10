@@ -67,7 +67,8 @@ void rank_end(void)
 
 }
 
-void RankSort(int id) {
+void RankSort(int id) 
+{
     for (int i = Score_h - 1; i >= id; i--) {
         if (i == id) {
             H_score[i] = game.score;

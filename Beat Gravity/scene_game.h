@@ -1,7 +1,7 @@
 #pragma once
 // 定数 ----------------------------------------------------------------
 #define GRAVITY     (2)
-#define SCORE_COIN  (20)
+#define SCORE_ITEM  (20)
 
 // クラス --------------------------------------------------------------
 class GAME
@@ -26,21 +26,24 @@ public:
     int bgHND[4] = { 0 };		    // 背景のデータハンドル
     int reHND[2] = { 0 };           // リトライ選択用のデータハンドル
     int bgmHND = 0;                 // BGMサウンドハンドル
+    int decideSE = 0;
+    int choiceSE = 0;
+    int deathSE = 0;                // 死亡SE
 };
 
 class PLAYER
 {
 public:
-    int state;       // 状態
-    int posX;        // X座標
-    int posY;        // Y座標
-    int init_posX;   // ゲーム開始時のX座標
-    int init_posY;   // ゲーム開始時のY座標
-    int speed;       // X軸方向の速度
-    int jumppower;   // ジャンプ力
-    int gravity;     // プレイヤーにかかる重力
-    bool gravityflg; // 重力が反転しているかどうかの判定(下向きでtrue)
-    bool grandflg;   // 地面にいるかどうかの判定(地面ならtrue)
+    int state;          // 状態
+    int posX;           // X座標
+    int posY;           // Y座標
+    int init_posX;      // ゲーム開始時のX座標
+    int init_posY;      // ゲーム開始時のY座標
+    int speed;          // X軸方向の速度
+    int jumppower;      // ジャンプ力
+    int gravity;        // プレイヤーにかかる重力
+    bool gravityflg;    // 重力が反転しているかどうかの判定(下向きでtrue)
+    bool grandflg;      // 地面にいるかどうかの判定(地面ならtrue)
     int plHND[5];       // playerのグラフィックハンドル
 };
 

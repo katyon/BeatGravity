@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "scene_select.h"
+#include "scene_title.h"
 #include "stage.h"
 
 // 変数 --------------------------------------------------------------------------------------------
@@ -15,6 +16,7 @@ extern int nextScene;
 // インスタンス宣言 ---------------------------------------------------------------------------------
 SELECT Select;
 
+extern TITLE title;
 extern STAGE stage;
 // 関数実体 ----------------------------------------------------------------------------------------
 void select_initialize(void)
@@ -27,7 +29,8 @@ void select_initialize(void)
     Select.numHND[STAGE1] = LoadGraph("Data\\Images\\select1.png");
     Select.numHND[STAGE2] = LoadGraph("Data\\Images\\select2.png");
     Select.numHND[STAGE3] = LoadGraph("Data\\Images\\select3.png");
-    Select.numHND[STAGE4] = LoadGraph("Data\\Images\\select4.png");
+    Select.decideSE = LoadSoundMem("Data\\Sounds\\decideSE.ogg");
+    Select.choiceSE = LoadSoundMem("Data\\Sounds\\choiceSE.ogg");
 }
 
 void select_update(void)
@@ -49,7 +52,9 @@ void select_update(void)
     {
     case INIT:
         ///// 初期設定 /////
-        Select.state++;
+        PlaySoundMem(title.BGM, DX_PLAYTYPE_LOOP, false);
+
+        Select.state = NORMAL;
         break;
 
     case NORMAL:
@@ -62,10 +67,11 @@ void select_update(void)
         if (key_trg[KEY_INPUT_5])nextScene = SCENE_RESULT;
         //-------------------------------
 
-        if (stage.num < STAGE4)
+        if (stage.num < STAGE3)
         {
             if (key_trg[KEY_INPUT_RIGHT])
             {
+                PlaySoundMem(Select.choiceSE, DX_PLAYTYPE_BACK,true);
                 stage.num++;
             }
         }
@@ -73,11 +79,13 @@ void select_update(void)
         {
             if (key_trg[KEY_INPUT_LEFT])
             {
+                PlaySoundMem(Select.choiceSE, DX_PLAYTYPE_BACK, true);
                 stage.num--;
             }
         }
         if (key_trg[KEY_INPUT_SPACE])
         {
+            PlaySoundMem(title.decideSE, DX_PLAYTYPE_BACK, true);
             nextScene = SCENE_GAME;
         }
         break;
@@ -99,9 +107,6 @@ void select_draw(void)
     case STAGE3:
         DrawGraph(0, 0, Select.numHND[STAGE3], true);
         break;
-    case STAGE4:
-        DrawGraph(0, 0, Select.numHND[STAGE4], true);
-        break;
     }
 
     // debug用 ---------------------------------------------------------
@@ -117,4 +122,7 @@ void select_draw(void)
 void select_end(void)
 {
     DeleteGraph(Select.bgHND);
+    DeleteSoundMem(Select.decideSE);
+    DeleteSoundMem(Select.choiceSE);
+    StopSoundMem(title.BGM);
 }

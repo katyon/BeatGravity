@@ -45,7 +45,6 @@ void game_initialize(void)
     game.bgHND[3] = LoadGraph("Data\\Images\\game_bg2R.png");
     game.reHND[0] = LoadGraph("Data\\Images\\retry_yes.png");
     game.reHND[1] = LoadGraph("Data\\Images\\retry_no.png");
-
     switch (stage.num)
     {
     case STAGE1:
@@ -57,10 +56,10 @@ void game_initialize(void)
     case STAGE3:
         game.bgmHND = LoadSoundMem("Data\\Sounds\\stage3BGM.ogg");
         break;
-    case STAGE4:
-        game.bgmHND = LoadSoundMem("Data\\Sounds\\stage4BGM.ogg");
-        break;
     }
+    game.decideSE = LoadSoundMem("Data\\Sounds\\decideSE.ogg");
+    game.choiceSE = LoadSoundMem("Data\\Sounds\\choiceSE.ogg");
+    game.deathSE = LoadSoundMem("Data\\Sounds\\deathSE.ogg");
 }
 
 // プレイヤーの初期設定
@@ -105,7 +104,7 @@ void game_update(void)
         stage_initialize();
         PlaySoundMem(game.bgmHND, DX_PLAYTYPE_BACK, false);
 
-        game.state++;
+        game.state = NORMAL;
         break;
 #pragma endregion
     case NORMAL:
@@ -151,7 +150,8 @@ void game_update(void)
         if (game.deathflg == true)
         {
             // 死亡時
-            game.state++;
+            PlaySoundMem(game.deathSE, DX_PLAYTYPE_BACK, true);
+            game.state = RETRY;
         }
         else
         {
@@ -245,17 +245,6 @@ void game_update(void)
                         pl.gravity = 0;
                         pl.gravity -= pl.jumppower;
                     }
-                }
-                // ジャンプパッド
-                if (detect_chip(pl.posX, pl.posY + 12) == BOTTOM_JUMPPAD)
-                {
-                    pl.gravity = 0;
-                    pl.gravity -= pl.jumppower + 10;
-                }
-                if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + 12) == BOTTOM_JUMPPAD)
-                {
-                    pl.gravity = 0;
-                    pl.gravity -= pl.jumppower + 10;
                 }
             }
 #pragma endregion
@@ -403,26 +392,46 @@ void game_update(void)
                 // 死亡判定
                 game.deathflg = true;
             }
-            // コイン
-            if (detect_chip(pl.posX, pl.posY) == COIN)
+            // アイテム
+            if (detect_chip(pl.posX, pl.posY) == ITEM1 || detect_chip(pl.posX, pl.posY) == ITEM2)
             {
                 stage.map_copy[pl.posY / CHIP_SIZE][pl.posX / CHIP_SIZE] = EMPTY;
-                game.score += SCORE_COIN;
+                game.score += SCORE_ITEM;
             }
-            if(detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == COIN)
+            if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == ITEM1 || detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == ITEM2)
             {
                 stage.map_copy[pl.posY / CHIP_SIZE][(pl.posX + CHIP_SIZE - 1) / CHIP_SIZE] = EMPTY;
-                game.score += SCORE_COIN;
+                game.score += SCORE_ITEM;
             }
-            if(detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == COIN)
+            if (detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == ITEM1 || detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == ITEM2)
             {
                 stage.map_copy[(pl.posY + CHIP_SIZE - 1) / CHIP_SIZE][pl.posX / CHIP_SIZE] = EMPTY;
-                game.score += SCORE_COIN;
+                game.score += SCORE_ITEM;
             }
-            if(detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == COIN)
+            if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == ITEM1 || detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == ITEM2)
             {
                 stage.map_copy[(pl.posY + CHIP_SIZE - 1) / CHIP_SIZE][(pl.posX + CHIP_SIZE - 1) / CHIP_SIZE] = EMPTY;
-                game.score += SCORE_COIN;
+                game.score += SCORE_ITEM;
+            }
+            // 重力反転
+            if (detect_chip(pl.posX, pl.posY) == CHANGE_GRAVITY ||
+                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == CHANGE_GRAVITY ||
+                detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == CHANGE_GRAVITY ||
+                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == CHANGE_GRAVITY)
+            {
+                if (key_trg[KEY_INPUT_SPACE])
+                {
+                    if (pl.gravityflg == true)
+                    {
+                        pl.gravityflg = false;
+                        pl.init_posY -= 660;
+                    }
+                    else
+                    {
+                        pl.gravityflg = true;
+                        pl.init_posY += 660;
+                    }
+                }
             }
             // ゴール
             if (detect_chip(pl.posX, pl.posY) == GOAL ||
@@ -452,30 +461,30 @@ void game_update(void)
         R_flg = true;
 
         // debug用------------------
-        if (key[KEY_INPUT_LEFT])
-        {
-            pl.posX -= pl.speed;
-        }
-        if (key[KEY_INPUT_RIGHT])
-        {
-            pl.posX += pl.speed;
-        }
-        if (key[KEY_INPUT_0])
-        {
-            pl.posX++;
-        }
-        if (key[KEY_INPUT_9])
-        {
-            pl.posY++;
-        }
-        if (key[KEY_INPUT_UP])
-        {
-            pl.posY -= pl.speed;
-        }
-        if (key[KEY_INPUT_DOWN])
-        {
-            pl.posY += pl.speed;
-        }
+        //if (key[KEY_INPUT_LEFT])
+        //{
+        //    pl.posX -= pl.speed;
+        //}
+        //if (key[KEY_INPUT_RIGHT])
+        //{
+        //    pl.posX += pl.speed;
+        //}
+        //if (key[KEY_INPUT_0])
+        //{
+        //    pl.posX++;
+        //}
+        //if (key[KEY_INPUT_9])
+        //{
+        //    pl.posY++;
+        //}
+        //if (key[KEY_INPUT_UP])
+        //{
+        //    pl.posY -= pl.speed;
+        //}
+        //if (key[KEY_INPUT_DOWN])
+        //{
+        //    pl.posY += pl.speed;
+        //}
         if (key_trg[KEY_INPUT_C])
         {
             game.state = POSE;
@@ -597,26 +606,20 @@ void game_draw(void)
     DrawFormatString(10, 150, Cr, "リセット:Xキー");
     DrawFormatString(10, 170, Cr, "ポーズ:Cキー");
 
-    DrawFormatString(140, 10, Cr, "0番は描画しない");
-    DrawFormatString(140, 30, Cr, "22番は崖下(死ぬ)");
-    DrawFormatString(140, 50, Cr, "25番は2段ジャンプ");
-    DrawFormatString(140, 70, Cr, "28番はコイン");
-    DrawFormatString(140, 90, Cr, "29番はゴール");
+    DrawFormatString(140, 10, Cr, "game.timer:%d", game.timer);
+    DrawFormatString(140, 30, Cr, "game.score:%d", game.score);
+    DrawFormatString(140, 50, Cr, "game.deathflg:%d", game.deathflg);
+    DrawFormatString(140, 70, Cr, "game.clearflg:%d", game.clearflg);
 
-    DrawFormatString(310, 10, Cr, "game.timer:%d", game.timer);
-    DrawFormatString(310, 30, Cr, "game.score:%d", game.score);
-    DrawFormatString(310, 50, Cr, "game.deathflg:%d", game.deathflg);
-    DrawFormatString(310, 70, Cr, "game.clearflg:%d", game.clearflg);
+    DrawFormatString(310, 10, Cr, "pl.posX:%d", pl.posX);
+    DrawFormatString(310, 30, Cr, "pl.posY:%d", pl.posY);
+    DrawFormatString(310, 50, Cr, "pl.gravity:%d", pl.gravity);
+    DrawFormatString(310, 70, Cr, "pl.gravityflg:%d", pl.gravityflg);
+    DrawFormatString(310, 90, Cr, "pl.grandflg:%d", pl.grandflg);
 
-    DrawFormatString(460, 10, Cr, "pl.posX:%d", pl.posX);
-    DrawFormatString(460, 30, Cr, "pl.posY:%d", pl.posY);
-    DrawFormatString(460, 50, Cr, "pl.gravity:%d", pl.gravity);
-    DrawFormatString(460, 70, Cr, "pl.gravityflg:%d", pl.gravityflg);
-    DrawFormatString(460, 90, Cr, "pl.grandflg:%d", pl.grandflg);
-
-    DrawFormatString(610, 10, Cr, "現在のプレイヤーの位置(マップチップ数)");
-    DrawFormatString(610, 30, Cr, "X:%d", pl.posX / CHIP_SIZE);
-    DrawFormatString(610, 50, Cr, "Y:%d", pl.posY / CHIP_SIZE);
+    DrawFormatString(460, 10, Cr, "現在のプレイヤーの位置(マップチップ数)");
+    DrawFormatString(460, 30, Cr, "X:%d", pl.posX / CHIP_SIZE);
+    DrawFormatString(460, 50, Cr, "Y:%d", pl.posY / CHIP_SIZE);
     //--------------------------------------------------------------------------------------
 }
 
@@ -653,12 +656,6 @@ void retry_draw(void)
     }
 }
 
-//// BGMの再生処理
-//void sound_play(void)
-//{
-//    PlaySoundMem(game.bgmHND, DX_PLAYTYPE_BACK, TRUE);
-//}
-
 // ゲームの終了処理
 void game_end(void)
 {
@@ -671,7 +668,11 @@ void game_end(void)
         DeleteGraph(game.bgHND[i]);
         DeleteGraph(game.reHND[i]);
     }
+
     DeleteSoundMem(game.bgmHND);
+    DeleteSoundMem(game.decideSE);
+    DeleteSoundMem(game.choiceSE);
+    DeleteSoundMem(game.deathSE);
 
     stage_end();
     player_end();

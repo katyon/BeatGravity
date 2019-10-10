@@ -43,7 +43,7 @@ void load_update(void)
     {
     case INIT:
         ///// ‰Šúİ’è /////
-        load.state++;
+        load.state = NORMAL;
         break;
 
     case NORMAL:

@@ -13,22 +13,6 @@
 STAGE stage;
 
 extern PLAYER pl;
-
-// ステージ構成 -------------------------------------------------------------------------------------
-//#pragma region ConstInit
-//// ステージ1
-//int map1[STAGE1_YCONST][STAGE1_XCONST] = { 0 };
-//
-//// ステージ2
-//int map2[STAGE2_YCONST][STAGE2_XCONST] = { 0 };
-//
-//// ステージ3
-//int map3[STAGE3_YCONST][STAGE3_XCONST] = { 0 };
-//
-//// debug用
-//int map4[STAGE4_YCONST][STAGE4_XCONST] = { 0 }:
-//#pragma endregion
-
 // 関数実体 ----------------------------------------------------------------------------------------
 // ステージの読み込み
 void load_mapFile(void)
@@ -44,9 +28,6 @@ void load_mapFile(void)
         break;
     case STAGE3:
         fp = fopen("Data\\Stages\\stage3.txt", "rt");
-        break;
-    case STAGE4:
-        fp = fopen("Data\\Stages\\stage4.txt", "rt");
         break;
     }
     for (int i = 0; i < STAGE_SIZE_Y; i++)
@@ -83,13 +64,16 @@ void stage_draw(void)
         {
             if (stage.map_copy[y][x] != EMPTY)
             {
-                if (pl.gravityflg == true)
+                if (stage.map_copy[y][x] != HOLE)
                 {
-                    DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.chipHND[stage.map_copy[y][x]], true);
-                }
-                else
-                {
-                    DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.chipHND[stage.map_copy[y][x]], true);
+                    if (pl.gravityflg == true)
+                    {
+                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.chipHND[stage.map_copy[y][x]], true);
+                    }
+                    else
+                    {
+                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.chipHND[stage.map_copy[y][x]], true);
+                    }
                 }
             }
         }

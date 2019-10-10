@@ -23,6 +23,8 @@ void title_initialize(void)
 	title.timer = 0;
 	title.transition_flg = false;
 	title.bgHND = LoadGraph("Data\\Images\\title_bg.png");
+    title.BGM = LoadSoundMem("Data\\Sounds\\titleBGM.ogg");
+    title.decideSE = LoadSoundMem("Data\\Sounds\\decideSE.ogg");
 }
 
 // タイトルの更新処理
@@ -45,7 +47,9 @@ void title_update(void)
 	{
 	case INIT:
 		///// 初期設定 /////
-		title.state++;
+        PlaySoundMem(title.BGM, DX_PLAYTYPE_LOOP, true);
+
+        title.state = NORMAL;
 		break;
 
 	case NORMAL:
@@ -59,6 +63,7 @@ void title_update(void)
         //-------------------------------
         if (key_trg[KEY_INPUT_SPACE])
         {
+            PlaySoundMem(title.decideSE, DX_PLAYTYPE_BACK, true);
             nextScene = SCENE_SELECT;
         }
 		break;
@@ -85,4 +90,6 @@ void title_draw(void)
 void title_end(void)
 {
 	DeleteGraph(title.bgHND);
+    DeleteSoundMem(title.decideSE);
+    //DeleteSoundMem(title.BGM);
 }
