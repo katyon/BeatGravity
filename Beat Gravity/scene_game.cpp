@@ -67,7 +67,7 @@ void player_initialize(void)
 {
     pl.state = 0;
     pl.init_posX = GAME_SCREEN_WIDTH / 2;
-    pl.init_posY = 840;
+    pl.init_posY = 720;
     pl.posX = 0;
     pl.posY = pl.init_posY + CHIP_SIZE * STAGE_SIZE_Y / 3;
     pl.speed = 13;
@@ -76,6 +76,7 @@ void player_initialize(void)
     pl.gravityflg = true;
     pl.grandflg = false;
     LoadDivGraph("Data\\Images\\player.png", 5, 5, 1, 60, 60, pl.plHND);
+    pl.koHND = LoadGraph("Data\\Images\\kobun.png");
 }
 
 // ゲームの更新処理
@@ -110,7 +111,7 @@ void game_update(void)
     case NORMAL:
 #pragma region NORMAL
         ///// 通常時 /////
-        // debug用-------------------------
+        // debug用 -------------------------
         if (key_trg[KEY_INPUT_1])nextScene = SCENE_TITLE;
         if (key_trg[KEY_INPUT_2])nextScene = SCENE_SELECT;
         if (key_trg[KEY_INPUT_3])nextScene = SCENE_LOAD;
@@ -126,12 +127,10 @@ void game_update(void)
             if (pl.gravityflg == true)
             {
                 pl.gravityflg = false;
-                pl.init_posY -= 660;
             }
             else
             {
                 pl.gravityflg = true;
-                pl.init_posY += 660;
             }
         }
         if (key_trg[KEY_INPUT_X])
@@ -146,7 +145,6 @@ void game_update(void)
         {
             nextScene = SCENE_RESULT;
         }
-
         if (game.deathflg == true)
         {
             // 死亡時
@@ -160,10 +158,29 @@ void game_update(void)
 #pragma region NormalGravity
             if (pl.gravityflg == true)
             {
+                pl.init_posY += SWAP_SPEED;
+                if (pl.init_posY > 720)
+                {
+                    pl.init_posY = 720;
+                }
                 // ジャンプ
                 if (pl.grandflg == true && key[KEY_INPUT_SPACE])
                 {
                     pl.gravity -= pl.jumppower;
+                }
+                else
+                {
+                    // ジャンプパッド
+                    if (detect_chip(pl.posX, pl.posY + 12) == BOTTOM_JUMPPAD)
+                    {
+                        pl.gravity = 0;
+                        pl.gravity -= pl.jumppower + 10;
+                    }
+                    if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + 12) == BOTTOM_JUMPPAD)
+                    {
+                        pl.gravity = 0;
+                        pl.gravity -= pl.jumppower + 10;
+                    }
                 }
 
                 // 重力と右移動
@@ -252,10 +269,29 @@ void game_update(void)
 #pragma region RebirthGravity
             else
             {
+                pl.init_posY -= SWAP_SPEED;
+                if (pl.init_posY < 300)
+                {
+                    pl.init_posY = 300;
+                }
                 // ジャンプ
                 if (pl.grandflg == true && key[KEY_INPUT_SPACE])
                 {
                     pl.gravity -= pl.jumppower;
+                }
+                else
+                {
+                    // ジャンプパッド
+                    if (detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1 - 12) == TOP_JUMPPAD)
+                    {
+                        pl.gravity = 0;
+                        pl.gravity -= pl.jumppower + 10;
+                    }
+                    if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1 - 12) == TOP_JUMPPAD)
+                    {
+                        pl.gravity = 0;
+                        pl.gravity -= pl.jumppower + 10;
+                    }
                 }
                 // 重力と右移動
                 pl.posY -= pl.gravity;
@@ -336,17 +372,6 @@ void game_update(void)
                         pl.gravity = 0;
                         pl.gravity -= pl.jumppower;
                     }
-                }
-                // ジャンプパッド
-                if (detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1 - 12) == TOP_JUMPPAD)
-                {
-                    pl.gravity = 0;
-                    pl.gravity -= pl.jumppower + 10;
-                }
-                if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1 - 12) == TOP_JUMPPAD)
-                {
-                    pl.gravity = 0;
-                    pl.gravity -= pl.jumppower + 10;
                 }
             }
 #pragma endregion
@@ -534,13 +559,13 @@ void game_update(void)
             PlaySoundMem(game.bgmHND, DX_PLAYTYPE_BACK, false);
         }
         //-----------------------
-
+  
         game.timer--;
         break;
 #pragma endregion
     }
 
-	game.timer++;
+    game.timer++;
 }
 
 // ゲームの描画処理
@@ -616,6 +641,7 @@ void game_draw(void)
     DrawFormatString(310, 50, Cr, "pl.gravity:%d", pl.gravity);
     DrawFormatString(310, 70, Cr, "pl.gravityflg:%d", pl.gravityflg);
     DrawFormatString(310, 90, Cr, "pl.grandflg:%d", pl.grandflg);
+    DrawFormatString(310, 150, Cr, "pl.init_posY:%d", pl.init_posY);
 
     DrawFormatString(460, 10, Cr, "現在のプレイヤーの位置(マップチップ数)");
     DrawFormatString(460, 30, Cr, "X:%d", pl.posX / CHIP_SIZE);
@@ -631,14 +657,14 @@ void player_draw(void)
         if (pl.gravityflg == true)
         {
             DrawGraph(pl.init_posX, pl.init_posY, pl.plHND[game.timer / 3 % 5], true);
-            // debug用
-            DrawBox(pl.init_posX, pl.init_posY, pl.init_posX + CHIP_SIZE + 1, pl.init_posY + CHIP_SIZE + 1, GetColor(255, 255, 255), FALSE);
+            if (1)
+            {
+                DrawGraph(pl.init_posX - pl.posX/3%CHIP_SIZE, pl.init_posY + CHIP_SIZE - 10, pl.koHND, true);
+            }
         }
         else
         {
             DrawGraph(pl.init_posX, pl.init_posY, pl.plHND[game.timer / 3 % 5], true);
-            // debug用
-            DrawBox(pl.init_posX, pl.init_posY, pl.init_posX + CHIP_SIZE + 1, pl.init_posY + CHIP_SIZE + 1, GetColor(255, 255, 255), FALSE);
         }
     }
 }

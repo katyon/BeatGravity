@@ -2,6 +2,7 @@
 // 定数 ----------------------------------------------------------------
 #define GRAVITY     (2)
 #define SCORE_ITEM  (20)
+#define SWAP_SPEED  (20)
 
 // クラス --------------------------------------------------------------
 class GAME
@@ -35,16 +36,18 @@ class PLAYER
 {
 public:
     int state;          // 状態
-    int posX;           // X座標
-    int posY;           // Y座標
     int init_posX;      // ゲーム開始時のX座標
     int init_posY;      // ゲーム開始時のY座標
+    int posX;           // X座標
+    int posY;           // Y座標
+    int timer;          // 子分用
     int speed;          // X軸方向の速度
     int jumppower;      // ジャンプ力
     int gravity;        // プレイヤーにかかる重力
     bool gravityflg;    // 重力が反転しているかどうかの判定(下向きでtrue)
     bool grandflg;      // 地面にいるかどうかの判定(地面ならtrue)
     int plHND[5];       // playerのグラフィックハンドル
+    int koHND;          // 子分
 };
 
 // プロトタイプ宣言 -----------------------------------------------------

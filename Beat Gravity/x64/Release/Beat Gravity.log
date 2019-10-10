@@ -1,3 +1,0 @@
-﻿  scene_game.cpp
-scene_game.cpp(502): warning C4305: '=': 'double' から 'float' へ切り詰めます。
-LINK : fatal error LNK1104: ファイル 'C:\Users\21900162\Documents\BeatGravity\Beat Gravity\x64\Release\Beat Gravity.exe' を開くことができません。
