@@ -7,6 +7,7 @@
 #include "scene_result.h"
 #include "scene_select.h"
 #include "scene_title.h"
+#include "stage.h"
 
 // 変数 --------------------------------------------------------------------------------------------
 // シーン切り替え用変数
@@ -48,6 +49,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// タイトルの初期設定
 	title_initialize();
 
+    // ステージの読み込み
+    load_mapFile();
+
 	// 描画先を裏画面にする
 	SetDrawScreen(DX_SCREEN_BACK);
 
@@ -77,6 +81,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
                 break;
 			case SCENE_GAME:
 				game_end();
+                stage_end();
 				break;
             case SCENE_RESULT:
                 result_end();
@@ -91,6 +96,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
                 title_initialize();
                 break;
             case SCENE_SELECT:
+
                 select_initialize();
                 break;
             case SCENE_LOAD:
@@ -98,6 +104,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
                 break;
             case SCENE_GAME:
                 game_initialize();
+                stage_initialize();
                 break;
             case SCENE_RESULT:
                 result_initialize();
@@ -170,6 +177,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         break;
     case SCENE_GAME:
         game_end();
+        stage_end();
         break;
     case SCENE_RESULT:
         result_end();

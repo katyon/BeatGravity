@@ -2,8 +2,8 @@
 #include "DxLib.h"
 
 #include "common.h"
+#include "scene_game.h"
 #include "scene_select.h"
-#include "scene_title.h"
 #include "stage.h"
 
 // 変数 --------------------------------------------------------------------------------------------
@@ -16,7 +16,7 @@ extern int nextScene;
 // インスタンス宣言 ---------------------------------------------------------------------------------
 SELECT Select;
 
-extern TITLE title;
+extern GAME game;
 extern STAGE stage;
 // 関数実体 ----------------------------------------------------------------------------------------
 void select_initialize(void)
@@ -31,6 +31,10 @@ void select_initialize(void)
     Select.numHND[STAGE3] = LoadGraph("Data\\Images\\select3.png");
     Select.decideSE = LoadSoundMem("Data\\Sounds\\decideSE.ogg");
     Select.choiceSE = LoadSoundMem("Data\\Sounds\\choiceSE.ogg");
+
+    stage.stageBGM[STAGE1] = LoadSoundMem("Data\\Sounds\\stage1BGM.ogg");
+    stage.stageBGM[STAGE2] = LoadSoundMem("Data\\Sounds\\stage2BGM.ogg");
+    stage.stageBGM[STAGE3] = LoadSoundMem("Data\\Sounds\\stage3BGM.ogg");
 }
 
 void select_update(void)
@@ -52,7 +56,7 @@ void select_update(void)
     {
     case INIT:
         ///// 初期設定 /////
-        PlaySoundMem(title.BGM, DX_PLAYTYPE_LOOP, false);
+        PlaySoundMem(stage.stageBGM[stage.num], DX_PLAYTYPE_BACK, true);
 
         Select.state = NORMAL;
         break;
@@ -71,21 +75,26 @@ void select_update(void)
         {
             if (key_trg[KEY_INPUT_RIGHT])
             {
+                StopSoundMem(stage.stageBGM[stage.num]);
                 PlaySoundMem(Select.choiceSE, DX_PLAYTYPE_BACK,true);
                 stage.num++;
+                PlaySoundMem(stage.stageBGM[stage.num], DX_PLAYTYPE_BACK, true);
             }
         }
         if (stage.num > STAGE1)
         {
             if (key_trg[KEY_INPUT_LEFT])
             {
+                StopSoundMem(stage.stageBGM[stage.num]);
                 PlaySoundMem(Select.choiceSE, DX_PLAYTYPE_BACK, true);
                 stage.num--;
+                PlaySoundMem(stage.stageBGM[stage.num], DX_PLAYTYPE_BACK, true);
             }
         }
         if (key_trg[KEY_INPUT_SPACE])
         {
-            PlaySoundMem(title.decideSE, DX_PLAYTYPE_BACK, true);
+            PlaySoundMem(Select.decideSE, DX_PLAYTYPE_BACK, true);
+            game.bgmHND = stage.stageBGM[stage.num];
             nextScene = SCENE_GAME;
         }
         break;
@@ -124,5 +133,4 @@ void select_end(void)
     DeleteGraph(Select.bgHND);
     DeleteSoundMem(Select.decideSE);
     DeleteSoundMem(Select.choiceSE);
-    StopSoundMem(title.BGM);
 }

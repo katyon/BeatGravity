@@ -13,7 +13,7 @@ enum CHIP
 {
     EMPTY, BOTTOM, BOTTOM_LCORNER, BOTTOM_RCORNER, BOTTOM_INSIDE, BOTTOM_LEFT, BOTTOM_RIGHT, BOTTOM_AIR, BOTTOM_LAIR, BOTTOM_RAIR,
     TOP, TOP_LCORNER, TOP_RCORNER, TOP_INSIDE, TOP_LEFT, TOP_RIGHT, TOP_AIR, TOP_LAIR, TOP_RAIR, DARK, LDARK, RDARK,
-    HOLE, BOTTOM_NEEDLE, TOP_NEEDLE, AIRJUMP, BOTTOM_JUMPPAD, TOP_JUMPPAD, ITEM1, ITEM2, CHANGE_GRAVITY, GOAL
+    HOLE, BOTTOM_NEEDLE, TOP_NEEDLE, AIRJUMP, BOTTOM_JUMPPAD, TOP_JUMPPAD, ITEM1, ITEM2, ITEM3, ITEM4, CHANGE_GRAVITY, GOAL
 };
 
 // クラス --------------------------------------------------------------
@@ -21,8 +21,12 @@ class STAGE
 {
 public:
     int num;                                        // ステージナンバー
+    int map1[STAGE_SIZE_Y][STAGE_SIZE_X] = { 0 };
+    int map2[STAGE_SIZE_Y][STAGE_SIZE_X] = { 0 };
+    int map3[STAGE_SIZE_Y][STAGE_SIZE_X] = { 0 };
     int map_copy[STAGE_SIZE_Y][STAGE_SIZE_X] = { 0 };   // 各ステージのコピー
     int chipHND[STAGE_ALLNUM];                      // マップチップのグラフィックハンドル
+    int stageBGM[3] = { 0 };
 };
 
 // プロトタイプ宣言 -----------------------------------------------------

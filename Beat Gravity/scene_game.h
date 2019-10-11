@@ -26,7 +26,7 @@ public:
     bool choice = true;             // Yes:true No:false
     int bgHND[4] = { 0 };		    // 背景のデータハンドル
     int reHND[2] = { 0 };           // リトライ選択用のデータハンドル
-    int bgmHND = 0;                 // BGMサウンドハンドル
+    int bgmHND = 0;
     int decideSE = 0;
     int choiceSE = 0;
     int deathSE = 0;                // 死亡SE
@@ -35,19 +35,26 @@ public:
 class PLAYER
 {
 public:
-    int state;          // 状態
-    int init_posX;      // ゲーム開始時のX座標
-    int init_posY;      // ゲーム開始時のY座標
-    int posX;           // X座標
-    int posY;           // Y座標
-    int timer;          // 子分用
-    int speed;          // X軸方向の速度
-    int jumppower;      // ジャンプ力
-    int gravity;        // プレイヤーにかかる重力
-    bool gravityflg;    // 重力が反転しているかどうかの判定(下向きでtrue)
-    bool grandflg;      // 地面にいるかどうかの判定(地面ならtrue)
-    int plHND[5];       // playerのグラフィックハンドル
-    int koHND;          // 子分
+    int state = 0;          // 状態
+    int box_moveX[3] = { 0 };    // 子分用
+    int box_moveY[3] = { 0 };
+    int box_speedX[3] = { 0 };
+    int box_speedY[3] = { 0 };
+    int rndX[3] = { 0 };
+    int rndY[3] = { 0 };
+    int init_posX = 0;      // ゲーム開始時のX座標
+    int init_posY = 0;      // ゲーム開始時のY座標
+    int posX = 0;           // X座標
+    int posY = 0;           // Y座標
+    int death_posX = 0;
+    int death_posY = 0;
+    int death_gravityY = 0;
+    int speed = 0;          // X軸方向の速度
+    int jumppower = 0;      // ジャンプ力
+    int gravity = 0;        // プレイヤーにかかる重力
+    bool gravityflg = true;    // 重力が反転しているかどうかの判定(下向きでtrue)
+    bool grandflg = true;      // 地面にいるかどうかの判定(地面ならtrue)
+    int plHND[5] = { 0 };       // playerのグラフィックハンドル
 };
 
 // プロトタイプ宣言 -----------------------------------------------------

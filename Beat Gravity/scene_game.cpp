@@ -39,24 +39,6 @@ void game_initialize(void)
     game.deathflg = false;
     game.clearflg = false;
     game.choice = true;
-    game.bgHND[0] = LoadGraph("Data\\Images\\game_bg1W.png");
-    game.bgHND[1] = LoadGraph("Data\\Images\\game_bg2W.png");
-    game.bgHND[2] = LoadGraph("Data\\Images\\game_bg1R.png");
-    game.bgHND[3] = LoadGraph("Data\\Images\\game_bg2R.png");
-    game.reHND[0] = LoadGraph("Data\\Images\\retry_yes.png");
-    game.reHND[1] = LoadGraph("Data\\Images\\retry_no.png");
-    switch (stage.num)
-    {
-    case STAGE1:
-        game.bgmHND = LoadSoundMem("Data\\Sounds\\stage1BGM.ogg");
-        break;
-    case STAGE2:
-        game.bgmHND = LoadSoundMem("Data\\Sounds\\stage2BGM.ogg");
-        break;
-    case STAGE3:
-        game.bgmHND = LoadSoundMem("Data\\Sounds\\stage3BGM.ogg");
-        break;
-    }
     game.decideSE = LoadSoundMem("Data\\Sounds\\decideSE.ogg");
     game.choiceSE = LoadSoundMem("Data\\Sounds\\choiceSE.ogg");
     game.deathSE = LoadSoundMem("Data\\Sounds\\deathSE.ogg");
@@ -66,17 +48,25 @@ void game_initialize(void)
 void player_initialize(void)
 {
     pl.state = 0;
+    pl.box_speedX[0] = 5;
+    pl.box_speedY[0] = 2;
+    pl.box_speedX[1] = 4;
+    pl.box_speedY[1] = 3;
+    pl.box_speedX[2] = 3;
+    pl.box_speedY[2] = 2;
     pl.init_posX = GAME_SCREEN_WIDTH / 2;
     pl.init_posY = 720;
     pl.posX = 0;
     pl.posY = pl.init_posY + CHIP_SIZE * STAGE_SIZE_Y / 3;
+    pl.death_posX = 0;
+    pl.death_posY = 0;
+    pl.death_gravityY = 0;
     pl.speed = 13;
     pl.jumppower = 25;
     pl.gravity = GRAVITY;
     pl.gravityflg = true;
     pl.grandflg = false;
     LoadDivGraph("Data\\Images\\player.png", 5, 5, 1, 60, 60, pl.plHND);
-    pl.koHND = LoadGraph("Data\\Images\\kobun.png");
 }
 
 // ゲームの更新処理
@@ -102,8 +92,8 @@ void game_update(void)
         ///// 初期設定 /////
         game_initialize();
         player_initialize();
-        stage_initialize();
-        PlaySoundMem(game.bgmHND, DX_PLAYTYPE_BACK, false);
+        //stage_initialize();
+        PlaySoundMem(game.bgmHND, DX_PLAYTYPE_BACK, true);
 
         game.state = NORMAL;
         break;
@@ -182,15 +172,14 @@ void game_update(void)
                         pl.gravity -= pl.jumppower + 10;
                     }
                 }
-
                 // 重力と右移動
                 pl.posX += pl.speed;
                 pl.posY += pl.gravity;
 
                 // マップチップごとの挙動
                 // 無
-                if (detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == EMPTY ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == EMPTY)
+                if (detect_chip(pl.posX, pl.posY + CHIP_SIZE) == EMPTY ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE) == EMPTY)
                 {
                     pl.grandflg = false;
                     pl.gravity += GRAVITY;
@@ -210,6 +199,24 @@ void game_update(void)
 
                     pl.grandflg = true;
                     pl.gravity = 0;
+                }
+                // 重力反転
+                if (detect_chip(pl.posX, pl.posY) == CHANGE_GRAVITY ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == CHANGE_GRAVITY ||
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == CHANGE_GRAVITY ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == CHANGE_GRAVITY)
+                {
+                    pl.grandflg = false;
+                    pl.gravity += GRAVITY;
+                    if (pl.gravity > 30)
+                    {
+                        pl.gravity = 30;
+                    }
+                    if (key_trg[KEY_INPUT_SPACE])
+                    {
+                        pl.gravity += pl.jumppower;
+                        pl.gravityflg = false;
+                    }
                 }
                 // 角(左)
                 if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == BOTTOM_LCORNER ||
@@ -252,10 +259,10 @@ void game_update(void)
                     pl.gravity = 0;
                 }
                 // ジャンプポイント
-                if (detect_chip(pl.posX, pl.posY) == AIRJUMP ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == AIRJUMP ||
-                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == AIRJUMP ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == AIRJUMP)
+                if (detect_chip(pl.posX - 10, pl.posY - 10) == AIRJUMP ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1 + 10, pl.posY - 10) == AIRJUMP ||
+                    detect_chip(pl.posX - 10, pl.posY + CHIP_SIZE - 1 + 10) == AIRJUMP ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1 + 10, pl.posY + CHIP_SIZE - 1 + 10) == AIRJUMP)
                 {
                     if (key_trg[KEY_INPUT_SPACE])
                     {
@@ -299,8 +306,8 @@ void game_update(void)
 
                 // マップチップごとの挙動
                 // 無
-                if (detect_chip(pl.posX, pl.posY) == EMPTY ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == EMPTY)
+                if (detect_chip(pl.posX, pl.posY - 1) == EMPTY ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY - 1) == EMPTY)
                 {
                     pl.grandflg = false;
                     pl.gravity += GRAVITY;
@@ -320,6 +327,24 @@ void game_update(void)
 
                     pl.grandflg = true;
                     pl.gravity = 0;
+                }
+                // 重力反転
+                if (detect_chip(pl.posX, pl.posY) == CHANGE_GRAVITY ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == CHANGE_GRAVITY ||
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == CHANGE_GRAVITY ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == CHANGE_GRAVITY)
+                {
+                    pl.grandflg = false;
+                    pl.gravity += GRAVITY;
+                    if (pl.gravity > 30)
+                    {
+                        pl.gravity = 30;
+                    }
+                    if (key_trg[KEY_INPUT_SPACE])
+                    {
+                        pl.gravity += pl.jumppower;
+                        pl.gravityflg = true;
+                    }
                 }
                 // 角(左)
                 if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + 30) == TOP_LCORNER ||
@@ -362,10 +387,10 @@ void game_update(void)
                     pl.gravity = 0;
                 }
                 // ジャンプポイント
-                if (detect_chip(pl.posX, pl.posY) == AIRJUMP ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == AIRJUMP ||
-                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == AIRJUMP ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == AIRJUMP)
+                if (detect_chip(pl.posX - 10, pl.posY - 10) == AIRJUMP ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1 + 10, pl.posY - 10) == AIRJUMP ||
+                    detect_chip(pl.posX - 10, pl.posY + CHIP_SIZE - 1 + 10) == AIRJUMP ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1 + 10, pl.posY + CHIP_SIZE - 1 + 10) == AIRJUMP)
                 {
                     if (key_trg[KEY_INPUT_SPACE])
                     {
@@ -438,26 +463,6 @@ void game_update(void)
                 stage.map_copy[(pl.posY + CHIP_SIZE - 1) / CHIP_SIZE][(pl.posX + CHIP_SIZE - 1) / CHIP_SIZE] = EMPTY;
                 game.score += SCORE_ITEM;
             }
-            // 重力反転
-            if (detect_chip(pl.posX, pl.posY) == CHANGE_GRAVITY ||
-                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == CHANGE_GRAVITY ||
-                detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == CHANGE_GRAVITY ||
-                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == CHANGE_GRAVITY)
-            {
-                if (key_trg[KEY_INPUT_SPACE])
-                {
-                    if (pl.gravityflg == true)
-                    {
-                        pl.gravityflg = false;
-                        pl.init_posY -= 660;
-                    }
-                    else
-                    {
-                        pl.gravityflg = true;
-                        pl.init_posY += 660;
-                    }
-                }
-            }
             // ゴール
             if (detect_chip(pl.posX, pl.posY) == GOAL ||
                 detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == GOAL ||
@@ -523,6 +528,25 @@ void game_update(void)
         ///// リトライ /////
         StopSoundMem(game.bgmHND);
 
+        for (int y = 0; y < STAGE_SIZE_Y; y++)
+        {
+            for (int x = 0; x <STAGE_SIZE_X; x++)
+            {
+                switch (stage.num)
+                {
+                case STAGE1:
+                    stage.map_copy[y][x] = stage.map1[y][x];
+                    break;
+                case STAGE2:
+                    stage.map_copy[y][x] = stage.map2[y][x];
+                    break;
+                case STAGE3:
+                    stage.map_copy[y][x] = stage.map3[y][x];
+                    break;
+                }
+            }
+        }
+
         if (key_trg[KEY_INPUT_UP])
         {
             game.choice = true;
@@ -536,11 +560,14 @@ void game_update(void)
         {
             if (game.choice == true)
             {
-                game_end();
+                //game_end();
+                player_end();
                 game.state = INIT;
             }
             else
             {
+                player_end();
+                game_end();
                 nextScene = SCENE_TITLE;
             }
         }
@@ -548,21 +575,21 @@ void game_update(void)
         game.timer--;
         break;
 #pragma endregion
-    case POSE:
-#pragma region POSE
-        StopSoundMem(game.bgmHND);
-
-        // degug-------------------
-        if (key_trg[KEY_INPUT_C])
-        {
-            game.state = NORMAL;
-            PlaySoundMem(game.bgmHND, DX_PLAYTYPE_BACK, false);
-        }
-        //-----------------------
-  
-        game.timer--;
-        break;
-#pragma endregion
+//    case POSE:
+//#pragma region POSE
+//        StopSoundMem(game.bgmHND);
+//
+//        // degug-------------------
+//        if (key_trg[KEY_INPUT_C])
+//        {
+//            game.state = NORMAL;
+//            PlaySoundMem(game.bgmHND, DX_PLAYTYPE_BACK, false);
+//        }
+//        //-----------------------
+//  
+//        game.timer--;
+//        break;
+//#pragma endregion
     }
 
     game.timer++;
@@ -642,6 +669,7 @@ void game_draw(void)
     DrawFormatString(310, 70, Cr, "pl.gravityflg:%d", pl.gravityflg);
     DrawFormatString(310, 90, Cr, "pl.grandflg:%d", pl.grandflg);
     DrawFormatString(310, 150, Cr, "pl.init_posY:%d", pl.init_posY);
+    DrawFormatString(310, 180, Cr, "pl.death_posY:%d", pl.death_posY);
 
     DrawFormatString(460, 10, Cr, "現在のプレイヤーの位置(マップチップ数)");
     DrawFormatString(460, 30, Cr, "X:%d", pl.posX / CHIP_SIZE);
@@ -652,26 +680,91 @@ void game_draw(void)
 // プレイヤーの描画処理
 void player_draw(void)
 {
+    unsigned int Cr;
+    Cr = GetColor(0, 0, 0);
+
     if (game.deathflg == false)
     {
         if (pl.gravityflg == true)
         {
             DrawGraph(pl.init_posX, pl.init_posY, pl.plHND[game.timer / 3 % 5], true);
-            if (1)
+            if (pl.grandflg == true)
             {
-                DrawGraph(pl.init_posX - pl.posX/3%CHIP_SIZE, pl.init_posY + CHIP_SIZE - 10, pl.koHND, true);
+                SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200 - pl.box_moveX[0] * 2);
+
+                DrawBox(pl.init_posX - 10 - pl.rndX[0] - pl.box_moveX[0], pl.init_posY + CHIP_SIZE - pl.rndY[0] - pl.box_moveY[0],
+                    pl.init_posX - pl.rndX[0] - pl.box_moveX[0], pl.init_posY + CHIP_SIZE, Cr, true);
+                DrawBox(pl.init_posX - 10 - pl.rndX[1] - pl.box_moveX[1], pl.init_posY + CHIP_SIZE - pl.rndY[1] - pl.box_moveY[1],
+                    pl.init_posX - pl.rndX[1] - pl.box_moveX[1], pl.init_posY + CHIP_SIZE, Cr, true);
+                DrawBox(pl.init_posX - 10 - pl.rndX[2] - pl.box_moveX[2], pl.init_posY + CHIP_SIZE - pl.rndY[2] - pl.box_moveY[2],
+                    pl.init_posX - pl.rndX[2] - pl.box_moveX[2], pl.init_posY + CHIP_SIZE, Cr, true);
+
+                SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
             }
         }
         else
         {
             DrawGraph(pl.init_posX, pl.init_posY, pl.plHND[game.timer / 3 % 5], true);
+
+            DrawBox(pl.init_posX - 10 - pl.rndX[0] - pl.box_moveX[0], pl.init_posY + CHIP_SIZE - pl.rndY[0] - pl.box_moveY[0],
+                pl.init_posX - pl.rndX[0] - pl.box_moveX[0], pl.init_posY + CHIP_SIZE, Cr, true);
+            DrawBox(pl.init_posX - 10 - pl.rndX[1] - pl.box_moveX[1], pl.init_posY + CHIP_SIZE - pl.rndY[1] - pl.box_moveY[1],
+                pl.init_posX - pl.rndX[1] - pl.box_moveX[1], pl.init_posY + CHIP_SIZE, Cr, true);
+            DrawBox(pl.init_posX - 10 - pl.rndX[2] - pl.box_moveX[2], pl.init_posY + CHIP_SIZE - pl.rndY[2] - pl.box_moveY[2],
+                pl.init_posX - pl.rndX[2] - pl.box_moveX[2], pl.init_posY + CHIP_SIZE, Cr, true);
         }
+
+        if (pl.box_moveX[0] > 80)
+        {
+            pl.rndX[0] = GetRand(6)*5;
+            pl.rndY[0] = GetRand(6)*5;
+            pl.box_moveX[0] = 0;
+            pl.box_moveY[0] = 0;
+            pl.box_speedY[0] = pl.box_speedY[0] * -1;
+        };
+        if (pl.box_moveY[0] > 30)
+        {
+            pl.box_speedY[0] = pl.box_speedY[0]*-1;
+        }
+        pl.box_moveX[0] += pl.box_speedX[0];
+        pl.box_moveY[0] += pl.box_speedY[0];
+        if (pl.box_moveX[1] > 80)
+        {
+            pl.rndX[1] = GetRand(6) * 5;
+            pl.rndY[1] = GetRand(6) * 3;
+            pl.box_moveX[1] = 0;
+            pl.box_moveY[1] = 0;
+            pl.box_speedY[1] = pl.box_speedY[1] * -1;
+        }
+        if (pl.box_moveY[1] > 30)
+        {
+            pl.box_speedY[1] = pl.box_speedY[1] * -1;
+        }
+        pl.box_moveX[1] += pl.box_speedX[1];
+        pl.box_moveY[1] += pl.box_speedY[1];
+        if (pl.box_moveX[2] > 80)
+        {
+            pl.rndX[2] = GetRand(6) * 5;
+            pl.rndY[2] = GetRand(6) * 3;
+            pl.box_moveX[2] = 0;
+            pl.box_moveY[2] = 0;
+            pl.box_speedY[2] = pl.box_speedY[2] * -1;
+        }
+        if (pl.box_moveY[2] > 30)
+        {
+            pl.box_speedY[2] = pl.box_speedY[2] * -1;
+        }
+        pl.box_moveX[2] += pl.box_speedX[2];
+        pl.box_moveY[2] += pl.box_speedY[2];
     }
 }
 
 // リトライの描画処理
 void retry_draw(void)
 {
+    unsigned int Cr;
+    Cr = GetColor(0, 0, 0);
+
     if (game.choice == true)
     {
         DrawGraph(0, 0, game.reHND[0],TRUE);
@@ -680,6 +773,14 @@ void retry_draw(void)
     {
         DrawGraph(0, 0, game.reHND[1], TRUE);
     }
+
+    //pl.death_gravityY += 1;
+    //pl.death_posX += 2;
+    //pl.death_posY += pl.death_gravityY;
+    //SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200 - pl.death_posX);
+    //DrawBox(pl.init_posX + CHIP_SIZE / 2 - 5 + pl.death_posX, pl.init_posY + CHIP_SIZE / 2 - 5 + pl.death_posY,
+    //    pl.init_posX + CHIP_SIZE / 2 + 5 + pl.death_posX, pl.init_posY + CHIP_SIZE / 2 + 5 + pl.death_posY, Cr, true);
+    //SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
 // ゲームの終了処理
@@ -700,7 +801,6 @@ void game_end(void)
     DeleteSoundMem(game.choiceSE);
     DeleteSoundMem(game.deathSE);
 
-    stage_end();
     player_end();
 }
 

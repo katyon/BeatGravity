@@ -75,7 +75,6 @@ void title_update(void)
 void title_draw(void)
 {
 	DrawGraph(0, 0, title.bgHND, false);
-
     // debug用 ---------------------------------------------------------
     DrawFormatString(0, 0, GetColor(255, 255, 255), "シーン切り替え");
     DrawFormatString(0, 20, GetColor(255, 255, 255), "title:1キー");
@@ -91,5 +90,5 @@ void title_end(void)
 {
 	DeleteGraph(title.bgHND);
     DeleteSoundMem(title.decideSE);
-    //DeleteSoundMem(title.BGM);
+    DeleteSoundMem(title.BGM);
 }
