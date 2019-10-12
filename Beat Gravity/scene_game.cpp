@@ -19,6 +19,8 @@ GAME game;
 PLAYER pl;
 
 extern STAGE stage;
+extern int H_score[Score_h];
+extern bool R_flg;
 // 関数実体 ----------------------------------------------------------------------------------------
 // ゲームの初期設定
 void game_initialize(void)
@@ -443,22 +445,22 @@ void game_update(void)
                 game.deathflg = true;
             }
             // アイテム
-            if (detect_chip(pl.posX, pl.posY) == ITEM1 || detect_chip(pl.posX, pl.posY) == ITEM2)
+            if (detect_chip(pl.posX, pl.posY) == BOTTOM_ITEM1 || detect_chip(pl.posX, pl.posY) == BOTTOM_ITEM2)
             {
                 stage.map_copy[pl.posY / CHIP_SIZE][pl.posX / CHIP_SIZE] = EMPTY;
                 game.score += SCORE_ITEM;
             }
-            if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == ITEM1 || detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == ITEM2)
+            if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == BOTTOM_ITEM1 || detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == BOTTOM_ITEM2)
             {
                 stage.map_copy[pl.posY / CHIP_SIZE][(pl.posX + CHIP_SIZE - 1) / CHIP_SIZE] = EMPTY;
                 game.score += SCORE_ITEM;
             }
-            if (detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == ITEM1 || detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == ITEM2)
+            if (detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM_ITEM1 || detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM_ITEM2)
             {
                 stage.map_copy[(pl.posY + CHIP_SIZE - 1) / CHIP_SIZE][pl.posX / CHIP_SIZE] = EMPTY;
                 game.score += SCORE_ITEM;
             }
-            if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == ITEM1 || detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == ITEM2)
+            if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_ITEM1 || detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_ITEM2)
             {
                 stage.map_copy[(pl.posY + CHIP_SIZE - 1) / CHIP_SIZE][(pl.posX + CHIP_SIZE - 1) / CHIP_SIZE] = EMPTY;
                 game.score += SCORE_ITEM;
@@ -566,9 +568,9 @@ void game_update(void)
             }
             else
             {
-                player_end();
-                game_end();
-                nextScene = SCENE_TITLE;
+                //player_end();
+                //game_end();
+                nextScene = SCENE_RESULT;
             }
         }
 

@@ -7,9 +7,10 @@
 #include "scene_result.h"
 
 // 変数 --------------------------------------------------------------------------------------------
+extern int H_score[Score_h];
+extern bool R_flg;
 // キー用変数
 extern char key_buf[MAX_KEY];
-
 
 // シーン遷移用変数
 extern int nextScene;
@@ -62,7 +63,8 @@ void result_update(void)
         
         // ランキング
 
-        if (R_flg == true) {
+        if (R_flg == true)
+        {
             rank_update();
             R_flg = false;
         }

@@ -23,6 +23,8 @@ void title_initialize(void)
 	title.timer = 0;
 	title.transition_flg = false;
 	title.bgHND = LoadGraph("Data\\Images\\title_bg.png");
+    title.spaceHND[0] = LoadGraph("Data\\Images\\space1.png");
+    title.spaceHND[1] = LoadGraph("Data\\Images\\space2.png");
     title.BGM = LoadSoundMem("Data\\Sounds\\titleBGM.ogg");
     title.decideSE = LoadSoundMem("Data\\Sounds\\decideSE.ogg");
 }
@@ -75,6 +77,8 @@ void title_update(void)
 void title_draw(void)
 {
 	DrawGraph(0, 0, title.bgHND, false);
+    DrawGraph(588,825, title.spaceHND[title.timer / 30 % 2], true);
+
     // debug用 ---------------------------------------------------------
     DrawFormatString(0, 0, GetColor(255, 255, 255), "シーン切り替え");
     DrawFormatString(0, 20, GetColor(255, 255, 255), "title:1キー");
@@ -89,6 +93,10 @@ void title_draw(void)
 void title_end(void)
 {
 	DeleteGraph(title.bgHND);
+    for (int i = 0; i < 2; i++)
+    {
+        DeleteGraph(title.spaceHND[i]);
+    }
     DeleteSoundMem(title.decideSE);
     DeleteSoundMem(title.BGM);
 }

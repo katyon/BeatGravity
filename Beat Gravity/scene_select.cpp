@@ -93,6 +93,7 @@ void select_update(void)
         }
         if (key_trg[KEY_INPUT_SPACE])
         {
+            StopSoundMem(stage.stageBGM[stage.num]);
             PlaySoundMem(Select.decideSE, DX_PLAYTYPE_BACK, true);
             game.bgmHND = stage.stageBGM[stage.num];
             nextScene = SCENE_GAME;
