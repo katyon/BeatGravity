@@ -17,3 +17,9 @@ enum STATE
 {
     INIT, NORMAL, NEXT, RETRY, POSE
 };
+
+class COMMON
+{
+public:
+    int font = 0;
+};

@@ -5,6 +5,7 @@
 #include "scene_game.h"
 #include "ranking.h"
 #include "scene_result.h"
+#include "stage.h"
 
 // 変数 --------------------------------------------------------------------------------------------
 extern int H_score[Score_h];
@@ -18,14 +19,18 @@ extern int nextScene;
 // インスタンス宣言 ---------------------------------------------------------------------------------
 RESULT result;
 
+extern STAGE stage;
+extern COMMON common;
+extern GAME game;
 // 関数実体 ----------------------------------------------------------------------------------------
-
 void result_initialize(void)
 {
     result.state = 0;
     result.timer = 0;
     result.transition_flg = false;
     result.bgHND = LoadGraph("Data\\Images\\result_bg.png");
+    result.spaceHND[0] = LoadGraph("Data\\Images\\space1.png");
+    result.spaceHND[1] = LoadGraph("Data\\Images\\space2.png");
     result.BGM = LoadSoundMem("Data\\Sounds\\resultBGM.ogg");
 }
 
@@ -48,43 +53,52 @@ void result_update(void)
     {
     case INIT:
         ///// 初期設定 /////
-        result.state = NORMAL;
-        break;
-
-    case NORMAL:
-        ///// 通常時 /////
-        // debug用 ----------------------
-        if (key_trg[KEY_INPUT_1])nextScene = SCENE_TITLE;
-        if (key_trg[KEY_INPUT_2])nextScene = SCENE_SELECT;
-        if (key_trg[KEY_INPUT_3])nextScene = SCENE_LOAD;
-        if (key_trg[KEY_INPUT_4])nextScene = SCENE_GAME;
-        if (key_trg[KEY_INPUT_5])nextScene = SCENE_RESULT;
-        //-------------------------------
-        
         // ランキング
-
         if (R_flg == true)
         {
             rank_update();
             R_flg = false;
         }
+
+        result.state = NORMAL;
+        break;
+
+    case NORMAL:
+        ///// 通常時 /////
+        if (key_trg[KEY_INPUT_SPACE])
+        {
+            nextScene = SCENE_TITLE;
+        }
+
         break;
     }
+
     result.timer++;
 }
 
 void result_draw(void)
 {
-    DrawGraph(0, 0, result.bgHND, false);
+    DrawGraph(0, 0, result.bgHND, true);
+    DrawExtendGraph(688, 920, 1200,1060,result.spaceHND[result.timer / 30 % 2], true);
 
-    // debug用 ---------------------------------------------------------
-    DrawFormatString(0, 0, GetColor(255, 255, 255), "シーン切り替え");
-    DrawFormatString(0, 20, GetColor(255, 255, 255), "title:1キー");
-    DrawFormatString(0, 40, GetColor(255, 255, 255), "select:2キー");
-    DrawFormatString(0, 60, GetColor(255, 255, 255), "load:3キー");
-    DrawFormatString(0, 80, GetColor(255, 255, 255), "game:4キー");
-    DrawFormatString(0, 100, GetColor(255, 255, 255), "result:5キー");
-    //---------------------------------------------------------------
+    switch (stage.num)
+    {
+    case STAGE1:
+        DrawFormatStringToHandle(250, 70, GetColor(255, 255, 255), common.font, "STAGE1");
+        break;
+    case STAGE2:
+        DrawFormatStringToHandle(250, 70, GetColor(255, 255, 255), common.font, "STAGE2");
+        break;
+    case STAGE3:
+        DrawFormatStringToHandle(250, 70, GetColor(255, 255, 255), common.font, "STAGE3");
+        break;
+    }
+    DrawFormatStringToHandle(880, 220, GetColor(255, 255, 255), common.font, "%d", game.score);
+    DrawFormatStringToHandle(880, 340, GetColor(255, 255, 255), common.font, "%d", H_score[0]);
+    DrawFormatStringToHandle(880, 440, GetColor(255, 255, 255), common.font, "%d", H_score[1]);
+    DrawFormatStringToHandle(880, 530, GetColor(255, 255, 255), common.font, "%d", H_score[2]);
+    DrawFormatStringToHandle(880, 620, GetColor(255, 255, 255), common.font, "%d", H_score[3]);
+    DrawFormatStringToHandle(880, 720, GetColor(255, 255, 255), common.font, "%d", H_score[4]);
 }
 
 void result_end(void)

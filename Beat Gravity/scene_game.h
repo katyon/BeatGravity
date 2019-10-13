@@ -1,7 +1,8 @@
 #pragma once
 // 定数 ----------------------------------------------------------------
 #define GRAVITY     (2)
-#define SCORE_ITEM  (20)
+#define SCORE_ITEM1  (10)
+#define SCORE_ITEM2  (15)
 #define SWAP_SPEED  (20)
 
 // クラス --------------------------------------------------------------
@@ -46,15 +47,18 @@ public:
     int init_posY = 0;      // ゲーム開始時のY座標
     int posX = 0;           // X座標
     int posY = 0;           // Y座標
-    int death_posX = 0;
-    int death_posY = 0;
-    int death_gravityY = 0;
+    int death_posX[10] = { 0 };
+    int death_posY[10] = { 0 };
+    int death_rndX[10] = { 0 };
+    int death_rndY[10] = { 0 };
+    int death_speed = 0;
     int speed = 0;          // X軸方向の速度
     int jumppower = 0;      // ジャンプ力
     int gravity = 0;        // プレイヤーにかかる重力
     bool gravityflg = true;    // 重力が反転しているかどうかの判定(下向きでtrue)
     bool grandflg = true;      // 地面にいるかどうかの判定(地面ならtrue)
     int plHND[5] = { 0 };       // playerのグラフィックハンドル
+    int deathHND = 0;
 };
 
 // プロトタイプ宣言 -----------------------------------------------------

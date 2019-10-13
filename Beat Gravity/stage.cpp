@@ -18,10 +18,10 @@ extern PLAYER pl;
 // ステージの読み込み
 void load_mapFile(void)
 {
-    FILE *fp1 = 0, *fp2 = 0, *fp3 = 0;
+    FILE *fp1 = 0, *fp2 = 0/*, *fp3 = 0*/;
     fp1 = fopen("Data\\Stages\\stage1.txt", "rt");
     fp2 = fopen("Data\\Stages\\stage2.txt", "rt");
-    fp3 = fopen("Data\\Stages\\stage3.txt", "rt");
+    //fp3 = fopen("Data\\Stages\\stage3.txt", "rt");
     for (int i = 0; i < STAGE_SIZE_Y; i++)
     {
 
@@ -29,15 +29,15 @@ void load_mapFile(void)
         {
             fscanf(fp1, "%d", &stage.map1[i][j]);
             fscanf(fp2, "%d", &stage.map2[i][j]);
-            fscanf(fp3, "%d", &stage.map3[i][j]);
+            //fscanf(fp3, "%d", &stage.map3[i][j]);
         }
         fprintf(fp1, "\n");
         fprintf(fp2, "\n");
-        fprintf(fp3, "\n");
+        //fprintf(fp3, "\n");
     }
     fclose(fp1);
     fclose(fp2);
-    fclose(fp3);
+    //fclose(fp3);
 }
 
 // ステージの初期設定
@@ -55,14 +55,14 @@ void stage_initialize(void)
             case STAGE2:
                 stage.map_copy[y][x] = stage.map2[y][x];
                 break;
-            case STAGE3:
-                stage.map_copy[y][x] = stage.map3[y][x];
-                break;
+            //case STAGE3:
+            //    stage.map_copy[y][x] = stage.map3[y][x];
+            //    break;
             }
         }
     }
 
-    LoadDivGraph("Data//Images//stage.png", STAGE_ALLNUM, 6, 6, CHIP_SIZE, CHIP_SIZE, stage.chipHND);
+    LoadDivGraph("Data//Images//stage.png", STAGE_ALLNUM, 6, 7, CHIP_SIZE, CHIP_SIZE, stage.chipHND);
 
     game.bgHND[0] = LoadGraph("Data\\Images\\game_bg1W.png");
     game.bgHND[1] = LoadGraph("Data\\Images\\game_bg2W.png");

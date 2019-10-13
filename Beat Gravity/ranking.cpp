@@ -7,12 +7,13 @@
 #include "ranking.h"
 #include "scene_game.h"
 #include "scene_result.h"
+#include "stage.h"
 
 // 変数 --------------------------------------------------------------------------------------------
 
 // インスタンス宣言 ---------------------------------------------------------------------------------
 extern GAME game;
-
+extern STAGE stage;
 // 関数実体 ----------------------------------------------------------------------------------------
 int H_score[Score_h] = { 0,0,0,0,0 };
 bool R_flg = true;
@@ -21,7 +22,18 @@ void rank_update(void)
 {
  
     FILE *fp = 0;
-    fp = fopen("scrsave.txt", "r");
+    switch (stage.num)
+    {
+    case STAGE1:
+        fp = fopen("Data\\Score\\scrsave1.txt", "r");
+        break;
+    case STAGE2:
+        fp = fopen("Data\\Score\\scrsave2.txt", "r");
+        break;
+    //case STAGE3:
+    //    fp = fopen("Data\\Score\\scrsave3.txt", "r");
+    //    break;
+    }
     if (fp != NULL)
     {
         for (int i = 0; i < Score_h; i++)
@@ -44,7 +56,18 @@ void rank_update(void)
         }
     }
 
-    fp = fopen("scrsave.txt", "w");
+    switch (stage.num)
+    {
+    case STAGE1:
+        fp = fopen("Data\\Score\\scrsave1.txt", "w");
+        break;
+    case STAGE2:
+        fp = fopen("Data\\Score\\scrsave2.txt", "w");
+        break;
+    //case STAGE3:
+    //    fp = fopen("Data\\Score\\scrsave3.txt", "w");
+    //    break;
+    }
     if (fp != NULL)
     {
         for (int i = 0; i < Score_h; i++)

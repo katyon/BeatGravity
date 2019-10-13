@@ -15,7 +15,7 @@ int curScene;
 int nextScene;
 
 // インスタンス宣言 ---------------------------------------------------------------------------------
-
+COMMON common;
 
 // WinMain -----------------------------------------------------------------------------------------
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -51,6 +51,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     // ステージの読み込み
     load_mapFile();
+
+    // フォントデータの読み込み
+    common.font = CreateFontToHandle("GauFontLoveRocketNeo", 70, 1,DX_FONTTYPE_ANTIALIASING);
 
 	// 描画先を裏画面にする
 	SetDrawScreen(DX_SCREEN_BACK);

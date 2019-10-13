@@ -28,13 +28,13 @@ void select_initialize(void)
     Select.bgHND = LoadGraph("Data\\Images\\select_bg.png");
     Select.numHND[STAGE1] = LoadGraph("Data\\Images\\select1.png");
     Select.numHND[STAGE2] = LoadGraph("Data\\Images\\select2.png");
-    Select.numHND[STAGE3] = LoadGraph("Data\\Images\\select3.png");
+    //Select.numHND[STAGE3] = LoadGraph("Data\\Images\\select3.png");
     Select.decideSE = LoadSoundMem("Data\\Sounds\\decideSE.ogg");
     Select.choiceSE = LoadSoundMem("Data\\Sounds\\choiceSE.ogg");
 
     stage.stageBGM[STAGE1] = LoadSoundMem("Data\\Sounds\\stage1BGM.ogg");
     stage.stageBGM[STAGE2] = LoadSoundMem("Data\\Sounds\\stage2BGM.ogg");
-    stage.stageBGM[STAGE3] = LoadSoundMem("Data\\Sounds\\stage3BGM.ogg");
+    //stage.stageBGM[STAGE3] = LoadSoundMem("Data\\Sounds\\stage3BGM.ogg");
 }
 
 void select_update(void)
@@ -71,7 +71,7 @@ void select_update(void)
         if (key_trg[KEY_INPUT_5])nextScene = SCENE_RESULT;
         //-------------------------------
 
-        if (stage.num < STAGE3)
+        if (stage.num < STAGE2)
         {
             if (key_trg[KEY_INPUT_RIGHT])
             {
@@ -114,9 +114,9 @@ void select_draw(void)
     case STAGE2:
         DrawGraph(0, 0, Select.numHND[STAGE2], true);
         break;
-    case STAGE3:
-        DrawGraph(0, 0, Select.numHND[STAGE3], true);
-        break;
+    //case STAGE3:
+    //    DrawGraph(0, 0, Select.numHND[STAGE3], true);
+    //    break;
     }
 
     // debug—p ---------------------------------------------------------
