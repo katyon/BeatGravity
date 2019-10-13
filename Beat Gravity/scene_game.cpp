@@ -148,7 +148,7 @@ void game_update(void)
         // ÉVÅ[ÉìëJà⁄
         if (game.clearflg == true)
         {
-            nextScene = SCENE_RESULT;
+            game.state = NEXT;
         }
         if (game.deathflg == true)
         {
@@ -971,6 +971,7 @@ void game_end(void)
         DeleteGraph(game.reHND[i]);
     }
 
+    DeleteGraph(game.sceneHND);
     DeleteSoundMem(game.bgmHND);
     DeleteSoundMem(game.decideSE);
     DeleteSoundMem(game.choiceSE);

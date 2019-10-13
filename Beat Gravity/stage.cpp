@@ -67,6 +67,7 @@ void stage_initialize(void)
     LoadDivGraph("Data\\Images\\jump.png", 4, 4, 1, CHIP_SIZE, CHIP_SIZE, stage.jumpHND);
     LoadDivGraph("Data\\Images\\gravity1.png", 6, 6, 1, 1200, 1080, stage.gravity1);
     LoadDivGraph("Data\\Images\\gravity2.png", 6, 6, 1, 1200, 1080, stage.gravity2);
+    stage.goalHND = LoadGraph("Data\\Images\\goal.png");
 
     game.bgHND[0] = LoadGraph("Data\\Images\\game_bg1W.png");
     game.bgHND[1] = LoadGraph("Data\\Images\\game_bg2W.png");
@@ -117,6 +118,9 @@ void stage_draw(void)
                                 case CHANGE_GRAVITY2:
                                     DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.gravity1[game.timer / 3 % 6], true);
                                     break;
+                                case GOAL2:
+                                    DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY - 180, stage.goalHND, true);
+                                    break;
                                 default:
                                     DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.chipHND[stage.map_copy[y][x]], true);
                                     break;
@@ -137,6 +141,9 @@ void stage_draw(void)
                                     break;
                                 case CHANGE_GRAVITY2:
                                     DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.gravity2[5 - game.timer / 3 % 6], true);
+                                    break;
+                                case GOAL2:
+                                    DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY - 180, stage.goalHND, true);
                                     break;
                                 default:
                                     DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.chipHND[stage.map_copy[y][x]], true);
