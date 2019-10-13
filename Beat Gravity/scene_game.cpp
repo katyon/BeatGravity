@@ -28,7 +28,11 @@ void game_initialize(void)
 {
 	game.state = 0;
 	game.timer = 0;
+    game.scenetimer = 0;
     game.score = 0;
+    game.percentage = 0;
+    game.sceneposX = GAME_SCREEN_WIDTH;
+    game.sceneposY = 0;
     game.bg1posX = 0;
     game.bg1posY = 0;
     game.bg1speed = 1;
@@ -42,6 +46,7 @@ void game_initialize(void)
     game.deathflg = false;
     game.clearflg = false;
     game.choice = true;
+    game.sceneHND = LoadGraph("Data\\Images\\scene.png");
     game.decideSE = LoadSoundMem("Data\\Sounds\\decideSE.ogg");
     game.choiceSE = LoadSoundMem("Data\\Sounds\\choiceSE.ogg");
     game.deathSE = LoadSoundMem("Data\\Sounds\\deathSE.ogg");
@@ -61,7 +66,7 @@ void player_initialize(void)
     pl.init_posY = 720;
     pl.posX = 0;
     pl.posY = pl.init_posY + CHIP_SIZE * STAGE_SIZE_Y / 3;
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 20; i++)
     {
         pl.death_posX[i] = 0;
         pl.death_posY[i] = 0;
@@ -288,6 +293,38 @@ void game_update(void)
                         pl.gravity -= pl.jumppower;
                     }
                 }
+                // •Ç(¶)
+                if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == BOTTOM_LEFT ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_LEFT)
+                {
+                    // Ž€–S”»’è
+                    game.deathflg = true;
+                }
+                // •Ç(‰E)
+                if (detect_chip(pl.posX, pl.posY) == BOTTOM_RIGHT ||
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM_RIGHT)
+                {
+                    // Ž€–S”»’è
+                    game.deathflg = true;
+                }
+                // ŠR‰º
+                if (detect_chip(pl.posX, pl.posY) == HOLE ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == HOLE ||
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == HOLE ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == HOLE)
+                {
+                    // Ž€–S”»’è
+                    game.deathflg = true;
+                }
+                // ƒgƒQ
+                if (detect_chip(pl.posX + 10, pl.posY + 10) == BOTTOM_NEEDLE ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1 - 10, pl.posY + 10) == BOTTOM_NEEDLE ||
+                    detect_chip(pl.posX + 10, pl.posY + CHIP_SIZE - 1 - 10) == BOTTOM_NEEDLE ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1 - 10, pl.posY + CHIP_SIZE - 1 - 10) == BOTTOM_NEEDLE)
+                {
+                    // Ž€–S”»’è
+                    game.deathflg = true;
+                }
             }
 #pragma endregion
             // ”½“]d—Í
@@ -378,8 +415,8 @@ void game_update(void)
                     detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + 30) == TOP_LAIR ||
                     detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE) == TOP_LAIR)
                 {
-                    // Ž€–S”»’è
-                    game.deathflg = true;
+                    // d—Í”½“]
+                    pl.gravityflg = true;
                 }
                 else if (detect_chip(pl.posX, pl.posY) == TOP_LCORNER ||
                     detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_LCORNER ||
@@ -398,8 +435,8 @@ void game_update(void)
                     detect_chip(pl.posX, pl.posY + 30) == TOP_RAIR ||
                     detect_chip(pl.posX, pl.posY + CHIP_SIZE) == TOP_RAIR)
                 {
-                    // Ž€–S”»’è
-                    game.deathflg = true;
+                    // d—Í”½“]
+                    pl.gravityflg = true;
                 }
                 else if (detect_chip(pl.posX, pl.posY) == TOP_RCORNER ||
                     detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_RCORNER ||
@@ -424,50 +461,82 @@ void game_update(void)
                         pl.gravity -= pl.jumppower;
                     }
                 }
+                // •Ç(¶)
+                if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_LEFT ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == TOP_LEFT)
+                {
+                    // d—Í”½“]
+                    pl.gravityflg = true;
+                }
+                // •Ç(‰E)
+                if (detect_chip(pl.posX, pl.posY) == TOP_RIGHT ||
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == TOP_RIGHT)
+                {
+                    // d—Í”½“]
+                    pl.gravityflg = true;
+                }
+                // ŠR‰º
+                if (detect_chip(pl.posX, pl.posY) == HOLE ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == HOLE ||
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == HOLE ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == HOLE)
+                {
+                    // d—Í”½“]
+                    pl.gravityflg = true;
+                }
+                // ƒgƒQ
+                if (detect_chip(pl.posX, pl.posY) == TOP_NEEDLE ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_NEEDLE ||
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == TOP_NEEDLE ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == TOP_NEEDLE)
+                {
+                    // d—Í”½“]
+                    pl.gravityflg = true;
+                }
             }
 #pragma endregion
             // ‹¤’Êˆ—
 #pragma region Common
-            // •Ç(¶)
-            if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_LEFT ||
-                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == TOP_LEFT ||
-                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == BOTTOM_LEFT ||
-                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_LEFT)
-            {
-                // Ž€–S”»’è
-                game.deathflg = true;
-            }
-            // •Ç(‰E)
-            if (detect_chip(pl.posX, pl.posY) == TOP_RIGHT ||
-                detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == TOP_RIGHT ||
-                detect_chip(pl.posX, pl.posY) == BOTTOM_RIGHT ||
-                detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM_RIGHT)
-            {
-                // Ž€–S”»’è
-                game.deathflg = true;
-            }
-            // ŠR‰º
-            if (detect_chip(pl.posX, pl.posY) == HOLE ||
-                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == HOLE ||
-                detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == HOLE ||
-                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == HOLE)
-            {
-                // Ž€–S”»’è
-                game.deathflg = true;
-            }
-            // ƒgƒQ
-            if (detect_chip(pl.posX + 10, pl.posY + 10) == BOTTOM_NEEDLE ||
-                detect_chip(pl.posX + CHIP_SIZE - 1 - 10, pl.posY + 10) == BOTTOM_NEEDLE ||
-                detect_chip(pl.posX + 10, pl.posY + CHIP_SIZE - 1 - 10) == BOTTOM_NEEDLE ||
-                detect_chip(pl.posX + CHIP_SIZE - 1 - 10, pl.posY + CHIP_SIZE - 1 - 10) == BOTTOM_NEEDLE ||
-                detect_chip(pl.posX, pl.posY) == TOP_NEEDLE ||
-                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_NEEDLE ||
-                detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == TOP_NEEDLE ||
-                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == TOP_NEEDLE)
-            {
-                // Ž€–S”»’è
-                game.deathflg = true;
-            }
+            //// •Ç(¶)
+            //if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_LEFT ||
+            //    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == TOP_LEFT ||
+            //    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == BOTTOM_LEFT ||
+            //    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_LEFT)
+            //{
+            //    // Ž€–S”»’è
+            //    game.deathflg = true;
+            //}
+            //// •Ç(‰E)
+            //if (detect_chip(pl.posX, pl.posY) == TOP_RIGHT ||
+            //    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == TOP_RIGHT ||
+            //    detect_chip(pl.posX, pl.posY) == BOTTOM_RIGHT ||
+            //    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM_RIGHT)
+            //{
+            //    // Ž€–S”»’è
+            //    game.deathflg = true;
+            //}
+            //// ŠR‰º
+            //if (detect_chip(pl.posX, pl.posY) == HOLE ||
+            //    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == HOLE ||
+            //    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == HOLE ||
+            //    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == HOLE)
+            //{
+            //    // Ž€–S”»’è
+            //    game.deathflg = true;
+            //}
+            //// ƒgƒQ
+            //if (detect_chip(pl.posX + 10, pl.posY + 10) == BOTTOM_NEEDLE ||
+            //    detect_chip(pl.posX + CHIP_SIZE - 1 - 10, pl.posY + 10) == BOTTOM_NEEDLE ||
+            //    detect_chip(pl.posX + 10, pl.posY + CHIP_SIZE - 1 - 10) == BOTTOM_NEEDLE ||
+            //    detect_chip(pl.posX + CHIP_SIZE - 1 - 10, pl.posY + CHIP_SIZE - 1 - 10) == BOTTOM_NEEDLE ||
+            //    detect_chip(pl.posX, pl.posY) == TOP_NEEDLE ||
+            //    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_NEEDLE ||
+            //    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == TOP_NEEDLE ||
+            //    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == TOP_NEEDLE)
+            //{
+            //    // Ž€–S”»’è
+            //    game.deathflg = true;
+            //}
             // ƒAƒCƒeƒ€
             if (detect_chip(pl.posX, pl.posY) == BOTTOM_ITEM)
             {
@@ -596,7 +665,7 @@ void game_update(void)
             {
                 //player_end();
                 //game_end();
-                nextScene = SCENE_RESULT;
+                game.state = NEXT;
             }
         }
 
@@ -618,6 +687,15 @@ void game_update(void)
 //        game.timer--;
 //        break;
 //#pragma endregion
+    case NEXT:
+        game.sceneposX -= 50;
+        if (game.sceneposX < -300)
+        {
+            game.sceneposX = -300;
+            nextScene = SCENE_RESULT;
+        }
+        game.scenetimer++;
+        break;
     }
 
     game.timer++;
@@ -635,10 +713,22 @@ void game_draw(void)
     {
         game.angle1 = PI;
     }
-    DrawRotaGraph(game.bg1posX + GAME_SCREEN_WIDTH / 2, game.bg1posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[0], true, false);
-    DrawRotaGraph(game.bg1posX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bg1posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[0], true, false);
-    DrawRotaGraph(game.bg2posX + GAME_SCREEN_WIDTH / 2, game.bg2posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[1], true, false);
-    DrawRotaGraph(game.bg2posX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bg2posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[1], true, false);
+    switch (stage.num)
+    {
+    case STAGE1:
+        DrawRotaGraph(game.bg1posX + GAME_SCREEN_WIDTH / 2, game.bg1posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[0], true, false);
+        DrawRotaGraph(game.bg1posX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bg1posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[0], true, false);
+        DrawRotaGraph(game.bg2posX + GAME_SCREEN_WIDTH / 2, game.bg2posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[1], true, false);
+        DrawRotaGraph(game.bg2posX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bg2posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[1], true, false);
+        break;
+    case STAGE2:
+        DrawRotaGraph(game.bg1posX + GAME_SCREEN_WIDTH / 2, game.bg1posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[4], true, false);
+        DrawRotaGraph(game.bg1posX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bg1posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[4], true, false);
+        DrawRotaGraph(game.bg2posX + GAME_SCREEN_WIDTH / 2, game.bg2posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[5], true, false);
+        DrawRotaGraph(game.bg2posX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bg2posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[5], true, false);
+        break;
+    }
+
     if (pl.gravityflg == true)
     {
         game.alpha1 = 0;
@@ -659,10 +749,21 @@ void game_draw(void)
             game.alpha1 += 5;
         }
     }
-    DrawRotaGraph(game.bg1posX + GAME_SCREEN_WIDTH / 2, game.bg1posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[2], true, false);
-    DrawRotaGraph(game.bg1posX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bg1posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[2], true, false);
-    DrawRotaGraph(game.bg2posX + GAME_SCREEN_WIDTH / 2, game.bg2posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[3], true, false);
-    DrawRotaGraph(game.bg2posX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bg2posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[3], true, false);
+    switch (stage.num)
+    {
+    case STAGE1:
+        DrawRotaGraph(game.bg1posX + GAME_SCREEN_WIDTH / 2, game.bg1posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[2], true, false);
+        DrawRotaGraph(game.bg1posX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bg1posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[2], true, false);
+        DrawRotaGraph(game.bg2posX + GAME_SCREEN_WIDTH / 2, game.bg2posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[3], true, false);
+        DrawRotaGraph(game.bg2posX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bg2posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[3], true, false);
+        break;
+    case STAGE2:
+        DrawRotaGraph(game.bg1posX + GAME_SCREEN_WIDTH / 2, game.bg1posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[6], true, false);
+        DrawRotaGraph(game.bg1posX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bg1posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[6], true, false);
+        DrawRotaGraph(game.bg2posX + GAME_SCREEN_WIDTH / 2, game.bg2posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[7], true, false);
+        DrawRotaGraph(game.bg2posX + GAME_SCREEN_WIDTH + GAME_SCREEN_WIDTH / 2, game.bg2posY + GAME_SCREEN_HEIGHT / 2, 1, game.angle1, game.bgHND[7], true, false);
+        break;
+    }
 
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
@@ -674,7 +775,11 @@ void game_draw(void)
         retry_draw();
     }
 
-    DrawFormatStringToHandle(GAME_SCREEN_WIDTH - 500, 30, GetColor(0, 255, 255), common.font, "%d", game.score);
+    DrawFormatStringToHandle(GAME_SCREEN_WIDTH - 500, 30, GetColor(0, 0, 0), common.font, "%d", game.score);
+
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 170 + game.scenetimer * 2);
+    DrawGraph(game.sceneposX, game.sceneposY, game.sceneHND, true);
+    SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
     // debug—p ------------------------------------------------------------------------------
     unsigned int Cr = GetColor(0, 200, 200);
@@ -733,7 +838,7 @@ void player_draw(void)
         }
         else
         {
-            DrawGraph(pl.init_posX, pl.init_posY, pl.plHND[game.timer / 3 % 5], true);
+            DrawTurnGraph(pl.init_posX, pl.init_posY, pl.plHND[game.timer / 3 % 5], true);
             if (pl.grandflg == true)
             {
                 SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200 - pl.box_moveX[0] * 2);
@@ -800,29 +905,19 @@ void retry_draw(void)
     unsigned int Cr;
     Cr = GetColor(0, 0, 0);
 
-    if (game.choice == true)
-    {
-        DrawGraph(0, 0, game.reHND[0],TRUE);
-    }
-    else
-    {
-        DrawGraph(0, 0, game.reHND[1], TRUE);
-    }
-
     // Ž€–SƒGƒtƒFƒNƒg
     if (pl.death_speed < 200)
     {
         pl.death_speed += 8;
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 20; i++)
         {
             pl.death_posX[i] += pl.death_rndX[i];
             pl.death_posY[i] += pl.death_rndY[i];
         }
     }
-
     SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200 - pl.death_speed);
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 20; i++)
     {
         DrawBox(pl.init_posX + CHIP_SIZE / 2 - 10 + pl.death_posX[i], pl.init_posY + CHIP_SIZE / 2 - 10 + pl.death_posY[i],
             pl.init_posX + CHIP_SIZE / 2 + 10 + pl.death_posX[i], pl.init_posY + CHIP_SIZE / 2 + 10 + pl.death_posY[i], Cr, true);
@@ -831,11 +926,35 @@ void retry_draw(void)
     DrawRotaGraph2(pl.init_posX + CHIP_SIZE / 2, pl.init_posY + CHIP_SIZE / 2, CHIP_SIZE / 2, CHIP_SIZE / 2, pl.death_speed / 5, 0, pl.deathHND, true);
 
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+    if (game.choice == true)
+    {
+        DrawGraph(0, 0, game.reHND[0],TRUE);
+    }
+    else
+    {
+        DrawGraph(0, 0, game.reHND[1], TRUE);
+    }
+    switch (stage.num)
+    {
+    case STAGE1:
+        game.percentage = 100 - game.timer / 72;
+        break;
+    case STAGE2:
+        game.percentage = 100 - game.timer / 72;
+        break;
+    }
+    if (game.percentage < 0)
+    {
+        game.percentage = 0;
+    }
+    DrawFormatStringToHandle(GAME_SCREEN_WIDTH / 2 - 260, 800, GetColor(255, 255, 255), common.font, "%d%% left", game.percentage);
 }
 
 // ƒQ[ƒ€‚ÌI—¹ˆ—
 void game_end(void)
 {
+
     for (int i = 0; i < 4; i++)
     {
         DeleteGraph(game.bgHND[i]);

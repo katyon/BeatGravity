@@ -27,10 +27,14 @@ void result_initialize(void)
 {
     result.state = 0;
     result.timer = 0;
+    result.scenetimer = 0;
+    result.sceneposX = GAME_SCREEN_WIDTH;
+    result.sceneposY = 0;
     result.transition_flg = false;
     result.bgHND = LoadGraph("Data\\Images\\result_bg.png");
     result.spaceHND[0] = LoadGraph("Data\\Images\\space1.png");
     result.spaceHND[1] = LoadGraph("Data\\Images\\space2.png");
+    result.sceneHND = LoadGraph("Data\\Images\\scene.png");
     result.BGM = LoadSoundMem("Data\\Sounds\\resultBGM.ogg");
 }
 
@@ -67,9 +71,19 @@ void result_update(void)
         ///// �ʏ펞 /////
         if (key_trg[KEY_INPUT_SPACE])
         {
+            result.state = NEXT;
+        }
+
+        break;
+    case NEXT:
+        result.sceneposX -= 50;
+        if (result.sceneposX < -300)
+        {
+            result.sceneposX = -300;
             nextScene = SCENE_TITLE;
         }
 
+        result.scenetimer++;
         break;
     }
 
@@ -89,9 +103,9 @@ void result_draw(void)
     case STAGE2:
         DrawFormatStringToHandle(250, 70, GetColor(255, 255, 255), common.font, "STAGE2");
         break;
-    case STAGE3:
-        DrawFormatStringToHandle(250, 70, GetColor(255, 255, 255), common.font, "STAGE3");
-        break;
+    //case STAGE3:
+    //    DrawFormatStringToHandle(250, 70, GetColor(255, 255, 255), common.font, "STAGE3");
+    //    break;
     }
     DrawFormatStringToHandle(880, 220, GetColor(255, 255, 255), common.font, "%d", game.score);
     DrawFormatStringToHandle(880, 340, GetColor(255, 255, 255), common.font, "%d", H_score[0]);
@@ -99,6 +113,10 @@ void result_draw(void)
     DrawFormatStringToHandle(880, 530, GetColor(255, 255, 255), common.font, "%d", H_score[2]);
     DrawFormatStringToHandle(880, 620, GetColor(255, 255, 255), common.font, "%d", H_score[3]);
     DrawFormatStringToHandle(880, 720, GetColor(255, 255, 255), common.font, "%d", H_score[4]);
+
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 170 + result.scenetimer * 2);
+    DrawGraph(result.sceneposX, result.sceneposY, result.sceneHND, true);
+    SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
 void result_end(void)

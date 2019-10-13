@@ -24,11 +24,14 @@ void select_initialize(void)
     stage.num = STAGE1;
     Select.state = 0;
     Select.timer = 0;
+    Select.bgposX = GAME_SCREEN_WIDTH;
+    Select.bgposY = 0;
     Select.transition_flg = false;
     Select.bgHND = LoadGraph("Data\\Images\\select_bg.png");
     Select.numHND[STAGE1] = LoadGraph("Data\\Images\\select1.png");
     Select.numHND[STAGE2] = LoadGraph("Data\\Images\\select2.png");
     //Select.numHND[STAGE3] = LoadGraph("Data\\Images\\select3.png");
+    Select.sceneHND = LoadGraph("Data\\Images\\scene.png");
     Select.decideSE = LoadSoundMem("Data\\Sounds\\decideSE.ogg");
     Select.choiceSE = LoadSoundMem("Data\\Sounds\\choiceSE.ogg");
 
@@ -96,11 +99,20 @@ void select_update(void)
             StopSoundMem(stage.stageBGM[stage.num]);
             PlaySoundMem(Select.decideSE, DX_PLAYTYPE_BACK, true);
             game.bgmHND = stage.stageBGM[stage.num];
-            nextScene = SCENE_GAME;
+            Select.state = NEXT;
         }
         break;
+
+    case NEXT:
+        Select.bgposX -= 50;
+        if (Select.bgposX < -300)
+        {
+            Select.bgposX = -300;
+            nextScene = SCENE_GAME;
+        }
+        Select.timer++;
+        break;
     }
-    Select.timer++;
 }
 
 void select_draw(void)
@@ -118,6 +130,9 @@ void select_draw(void)
     //    DrawGraph(0, 0, Select.numHND[STAGE3], true);
     //    break;
     }
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 170 + Select.timer * 2);
+    DrawGraph(Select.bgposX, Select.bgposY, Select.sceneHND, true);
+    SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
     // debug用 ---------------------------------------------------------
     DrawFormatString(0, 0, GetColor(255, 255, 255), "シーン切り替え");
@@ -127,6 +142,7 @@ void select_draw(void)
     DrawFormatString(0, 80, GetColor(255, 255, 255), "game:4キー");
     DrawFormatString(0, 100, GetColor(255, 255, 255), "result:5キー");
     //---------------------------------------------------------------
+
 }
 
 void select_end(void)

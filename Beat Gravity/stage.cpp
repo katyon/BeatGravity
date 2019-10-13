@@ -68,6 +68,10 @@ void stage_initialize(void)
     game.bgHND[1] = LoadGraph("Data\\Images\\game_bg2W.png");
     game.bgHND[2] = LoadGraph("Data\\Images\\game_bg1R.png");
     game.bgHND[3] = LoadGraph("Data\\Images\\game_bg2R.png");
+    game.bgHND[4] = LoadGraph("Data\\Images\\game_bg1B.png");
+    game.bgHND[5] = LoadGraph("Data\\Images\\game_bg2B.png");
+    game.bgHND[6] = LoadGraph("Data\\Images\\game_bg1P.png");
+    game.bgHND[7] = LoadGraph("Data\\Images\\game_bg2P.png");
     game.reHND[0] = LoadGraph("Data\\Images\\retry_yes.png");
     game.reHND[1] = LoadGraph("Data\\Images\\retry_no.png");
 }

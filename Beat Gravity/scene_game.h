@@ -11,7 +11,11 @@ class GAME
 public:
 	int state = 0;					// 状態
 	int timer = 0;					// タイマー
+    int scenetimer = 0;
     int score = 0;                  // スコア
+    int percentage = 0;
+    int sceneposX = 0;
+    int sceneposY = 0;
     int bg1posX = 0;                // 背景X座標
     int bg1posY = 0;                // 背景Y座標
     int bg1speed = 0;               // 背景スクロール速度
@@ -25,8 +29,9 @@ public:
     bool deathflg = false;          // 死亡：true
     bool clearflg = false;          // ゲームクリア：true
     bool choice = true;             // Yes:true No:false
-    int bgHND[4] = { 0 };		    // 背景のデータハンドル
+    int bgHND[8] = { 0 };		    // 背景のデータハンドル
     int reHND[2] = { 0 };           // リトライ選択用のデータハンドル
+    int sceneHND = 0;
     int bgmHND = 0;
     int decideSE = 0;
     int choiceSE = 0;
@@ -47,10 +52,10 @@ public:
     int init_posY = 0;      // ゲーム開始時のY座標
     int posX = 0;           // X座標
     int posY = 0;           // Y座標
-    int death_posX[10] = { 0 };
-    int death_posY[10] = { 0 };
-    int death_rndX[10] = { 0 };
-    int death_rndY[10] = { 0 };
+    int death_posX[20] = { 0 };
+    int death_posY[20] = { 0 };
+    int death_rndX[20] = { 0 };
+    int death_rndY[20] = { 0 };
     int death_speed = 0;
     int speed = 0;          // X軸方向の速度
     int jumppower = 0;      // ジャンプ力
