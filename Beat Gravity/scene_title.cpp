@@ -80,11 +80,11 @@ void title_update(void)
 	case NORMAL:
 		///// í èÌéû /////
         // debugóp ----------------------
-        if (key_trg[KEY_INPUT_1])nextScene = SCENE_TITLE;
-        if (key_trg[KEY_INPUT_2])nextScene = SCENE_SELECT;
-        if (key_trg[KEY_INPUT_3])nextScene = SCENE_LOAD;
-        if (key_trg[KEY_INPUT_4])nextScene = SCENE_GAME;
-        if (key_trg[KEY_INPUT_5])nextScene = SCENE_RESULT;
+        //if (key_trg[KEY_INPUT_1])nextScene = SCENE_TITLE;
+        //if (key_trg[KEY_INPUT_2])nextScene = SCENE_SELECT;
+        //if (key_trg[KEY_INPUT_3])nextScene = SCENE_LOAD;
+        //if (key_trg[KEY_INPUT_4])nextScene = SCENE_GAME;
+        //if (key_trg[KEY_INPUT_5])nextScene = SCENE_RESULT;
         //-------------------------------
         if (key_trg[KEY_INPUT_SPACE])
         {

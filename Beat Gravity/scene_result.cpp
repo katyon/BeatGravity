@@ -36,6 +36,7 @@ void result_initialize(void)
     result.spaceHND[1] = LoadGraph("Data\\Images\\space2.png");
     result.sceneHND = LoadGraph("Data\\Images\\scene.png");
     result.BGM = LoadSoundMem("Data\\Sounds\\resultBGM.ogg");
+    result.decideSE= LoadSoundMem("Data\\Sounds\\decideSE.ogg");
 }
 
 void result_update(void)
@@ -57,6 +58,8 @@ void result_update(void)
     {
     case INIT:
         ///// ‰Šúİ’è /////
+        PlaySoundMem(result.BGM, DX_PLAYTYPE_LOOP, true);
+
         // ƒ‰ƒ“ƒLƒ“ƒO
         if (R_flg == true)
         {
@@ -71,6 +74,8 @@ void result_update(void)
         ///// ’Êí /////
         if (key_trg[KEY_INPUT_SPACE])
         {
+            PlaySoundMem(result.decideSE, DX_PLAYTYPE_BACK, true);
+
             result.state = NEXT;
         }
 
@@ -122,4 +127,7 @@ void result_draw(void)
 void result_end(void)
 {
     DeleteGraph(result.bgHND);
+    DeleteGraph(result.sceneHND);
+    DeleteSoundMem(result.BGM);
+    DeleteSoundMem(result.decideSE);
 }

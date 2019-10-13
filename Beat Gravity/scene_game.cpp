@@ -117,32 +117,32 @@ void game_update(void)
 #pragma region NORMAL
         ///// 通常時 /////
         // debug用 -------------------------
-        if (key_trg[KEY_INPUT_1])nextScene = SCENE_TITLE;
-        if (key_trg[KEY_INPUT_2])nextScene = SCENE_SELECT;
-        if (key_trg[KEY_INPUT_3])nextScene = SCENE_LOAD;
-        if (key_trg[KEY_INPUT_4])nextScene = SCENE_GAME;
-        if (key_trg[KEY_INPUT_5])nextScene = SCENE_RESULT;
+        //if (key_trg[KEY_INPUT_1])nextScene = SCENE_TITLE;
+        //if (key_trg[KEY_INPUT_2])nextScene = SCENE_SELECT;
+        //if (key_trg[KEY_INPUT_3])nextScene = SCENE_LOAD;
+        //if (key_trg[KEY_INPUT_4])nextScene = SCENE_GAME;
+        //if (key_trg[KEY_INPUT_5])nextScene = SCENE_RESULT;
 
-        if (key_trg[KEY_INPUT_LSHIFT])
-        {
-            game.clearflg = true;
-        }
-        if (key_trg[KEY_INPUT_Z])
-        {
-            if (pl.gravityflg == true)
-            {
-                pl.gravityflg = false;
-            }
-            else
-            {
-                pl.gravityflg = true;
-            }
-        }
-        if (key_trg[KEY_INPUT_X])
-        {
-            game_end();
-            game.state = INIT;
-        }
+        //if (key_trg[KEY_INPUT_LSHIFT])
+        //{
+        //    game.clearflg = true;
+        //}
+        //if (key_trg[KEY_INPUT_Z])
+        //{
+        //    if (pl.gravityflg == true)
+        //    {
+        //        pl.gravityflg = false;
+        //    }
+        //    else
+        //    {
+        //        pl.gravityflg = true;
+        //    }
+        //}
+        //if (key_trg[KEY_INPUT_X])
+        //{
+        //    game_end();
+        //    game.state = INIT;
+        //}
         //---------------------------------
 
         // シーン遷移
@@ -631,10 +631,10 @@ void game_update(void)
         //{
         //    pl.posY += pl.speed;
         //}
-        if (key_trg[KEY_INPUT_C])
-        {
-            game.state = POSE;
-        }
+        //if (key_trg[KEY_INPUT_C])
+        //{
+        //    game.state = POSE;
+        //}
         //---------------------------
 
         break;
@@ -646,15 +646,21 @@ void game_update(void)
 
         if (key_trg[KEY_INPUT_LEFT])
         {
+            PlaySoundMem(game.choiceSE, DX_PLAYTYPE_BACK, true);
+
             game.choice = true;
         }
         if (key_trg[KEY_INPUT_RIGHT])
         {
+            PlaySoundMem(game.choiceSE, DX_PLAYTYPE_BACK, true);
+
             game.choice = false;
         }
 
         if (key_trg[KEY_INPUT_SPACE])
         {
+            PlaySoundMem(game.decideSE, DX_PLAYTYPE_BACK, true);
+
             if (game.choice == true)
             {
                 //game_end();
@@ -782,32 +788,32 @@ void game_draw(void)
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
     // debug用 ------------------------------------------------------------------------------
-    unsigned int Cr = GetColor(0, 200, 200);
+    //unsigned int Cr = GetColor(0, 200, 200);
 
-    DrawFormatString(10, 10, Cr, "シーン切り替え");
-    DrawFormatString(10, 30, Cr, "title:1キー");
-    DrawFormatString(10, 50, Cr, "select:2キー");
-    DrawFormatString(10, 70, Cr, "load:3キー");
-    DrawFormatString(10, 90, Cr, "game:4キー");
-    DrawFormatString(10, 110, Cr, "result:5キー");
-    DrawFormatString(10, 130, Cr, "重力反転:Zキー");
-    DrawFormatString(10, 150, Cr, "リセット:Xキー");
-    DrawFormatString(10, 170, Cr, "ポーズ:Cキー");
+    //DrawFormatString(10, 10, Cr, "シーン切り替え");
+    //DrawFormatString(10, 30, Cr, "title:1キー");
+    //DrawFormatString(10, 50, Cr, "select:2キー");
+    //DrawFormatString(10, 70, Cr, "load:3キー");
+    //DrawFormatString(10, 90, Cr, "game:4キー");
+    //DrawFormatString(10, 110, Cr, "result:5キー");
+    //DrawFormatString(10, 130, Cr, "重力反転:Zキー");
+    //DrawFormatString(10, 150, Cr, "リセット:Xキー");
+    //DrawFormatString(10, 170, Cr, "ポーズ:Cキー");
 
-    DrawFormatString(140, 10, Cr, "game.timer:%d", game.timer);
-    DrawFormatString(140, 30, Cr, "game.score:%d", game.score);
-    DrawFormatString(140, 50, Cr, "game.deathflg:%d", game.deathflg);
-    DrawFormatString(140, 70, Cr, "game.clearflg:%d", game.clearflg);
+    //DrawFormatString(140, 10, Cr, "game.timer:%d", game.timer);
+    //DrawFormatString(140, 30, Cr, "game.score:%d", game.score);
+    //DrawFormatString(140, 50, Cr, "game.deathflg:%d", game.deathflg);
+    //DrawFormatString(140, 70, Cr, "game.clearflg:%d", game.clearflg);
 
-    DrawFormatString(310, 10, Cr, "pl.posX:%d", pl.posX);
-    DrawFormatString(310, 30, Cr, "pl.posY:%d", pl.posY);
-    DrawFormatString(310, 50, Cr, "pl.gravity:%d", pl.gravity);
-    DrawFormatString(310, 70, Cr, "pl.gravityflg:%d", pl.gravityflg);
-    DrawFormatString(310, 90, Cr, "pl.grandflg:%d", pl.grandflg);
+    //DrawFormatString(310, 10, Cr, "pl.posX:%d", pl.posX);
+    //DrawFormatString(310, 30, Cr, "pl.posY:%d", pl.posY);
+    //DrawFormatString(310, 50, Cr, "pl.gravity:%d", pl.gravity);
+    //DrawFormatString(310, 70, Cr, "pl.gravityflg:%d", pl.gravityflg);
+    //DrawFormatString(310, 90, Cr, "pl.grandflg:%d", pl.grandflg);
 
-    DrawFormatString(460, 10, Cr, "現在のプレイヤーの位置(マップチップ数)");
-    DrawFormatString(460, 30, Cr, "X:%d", pl.posX / CHIP_SIZE);
-    DrawFormatString(460, 50, Cr, "Y:%d", pl.posY / CHIP_SIZE);
+    //DrawFormatString(460, 10, Cr, "現在のプレイヤーの位置(マップチップ数)");
+    //DrawFormatString(460, 30, Cr, "X:%d", pl.posX / CHIP_SIZE);
+    //DrawFormatString(460, 50, Cr, "Y:%d", pl.posY / CHIP_SIZE);
     //--------------------------------------------------------------------------------------
 }
 

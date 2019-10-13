@@ -14,6 +14,7 @@ public:
     int spaceHND[2] = { 0 };
     int sceneHND = 0;
     int BGM = 0;
+    int decideSE = 0;
     bool transition_flg = false;	// シーン遷移用のフラグ
 };
 

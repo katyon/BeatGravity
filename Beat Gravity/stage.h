@@ -23,9 +23,13 @@ public:
     int num;                                        // ステージナンバー
     int map1[STAGE_SIZE_Y][STAGE_SIZE_X] = { 0 };
     int map2[STAGE_SIZE_Y][STAGE_SIZE_X] = { 0 };
-    int map3[STAGE_SIZE_Y][STAGE_SIZE_X] = { 0 };
+    //int map3[STAGE_SIZE_Y][STAGE_SIZE_X] = { 0 };
     int map_copy[STAGE_SIZE_Y][STAGE_SIZE_X] = { 0 };   // 各ステージのコピー
     int chipHND[STAGE_ALLNUM];                      // マップチップのグラフィックハンドル
+    int padHND[14] = { 0 };
+    int jumpHND[4] = { 0 };
+    int gravity1[6] = { 0 };
+    int gravity2[6] = { 0 };
     int stageBGM[3] = { 0 };
 };
 
