@@ -9,7 +9,9 @@ public:
     int timer = 0;					// タイマー
     int bgposX = 0;
     int bgposY = 0;
-    int bgHND = 0;					// 背景のデータハンドル
+    int bgHND = 0;
+    int bg1HND = 0;					// 背景のデータハンドル
+    int bg2HND = 0;
     int numHND[4] = { 0 };          // select用ハンドル
     int sceneHND = 0;
     int decideSE = 0;

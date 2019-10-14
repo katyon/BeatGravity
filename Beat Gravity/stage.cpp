@@ -62,7 +62,8 @@ void stage_initialize(void)
         }
     }
 
-    LoadDivGraph("Data\\Images\\stage.png", STAGE_ALLNUM, 6, 7, CHIP_SIZE, CHIP_SIZE, stage.chipHND);
+    LoadDivGraph("Data\\Images\\stage1.png", STAGE_ALLNUM, 6, 7, CHIP_SIZE, CHIP_SIZE, stage.chip1HND);
+    LoadDivGraph("Data\\Images\\stage2.png", STAGE_ALLNUM, 6, 7, CHIP_SIZE, CHIP_SIZE, stage.chip2HND);
     LoadDivGraph("Data\\Images\\pad.png", 14, 14, 1, 60, 98, stage.padHND);
     LoadDivGraph("Data\\Images\\jump.png", 4, 4, 1, CHIP_SIZE, CHIP_SIZE, stage.jumpHND);
     LoadDivGraph("Data\\Images\\gravity1.png", 6, 6, 1, 1200, 1080, stage.gravity1);
@@ -90,64 +91,68 @@ int detect_chip(int pl_posX, int pl_posY)
 // ステージの描画処理
 void stage_draw(void)
 {
-    for (int y = 0; y < STAGE_SIZE_Y; y++)
+    switch (stage.num)
     {
-        for (int x = 0; x < STAGE_SIZE_X; x++)
+    case STAGE1:
+        for (int y = 0; y < STAGE_SIZE_Y; y++)
         {
-            if (stage.map_copy[y][x] != EMPTY)
+            for (int x = 0; x < STAGE_SIZE_X; x++)
             {
-                if (stage.map_copy[y][x] != HOLE)
+                if (stage.map_copy[y][x] != EMPTY)
                 {
-                    if (stage.map_copy[y][x] != CHANGE_GRAVITY)
+                    if (stage.map_copy[y][x] != HOLE)
                     {
-                        if (stage.map_copy[y][x] != GOAL)
+                        if (stage.map_copy[y][x] != CHANGE_GRAVITY)
                         {
-                            if (pl.gravityflg == true)
+                            if (stage.map_copy[y][x] != GOAL)
                             {
-                                switch (stage.map_copy[y][x])
+                                if (pl.gravityflg == true)
                                 {
-                                case BOTTOM_JUMPPAD:
-                                    DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY - 38, stage.padHND[game.timer / 3 % 14], true);
-                                    break;
-                                case TOP_JUMPPAD:
-                                    DrawRotaGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, 1.0, PI, stage.padHND[game.timer / 3 % 14], true);
-                                    break;
-                                case AIRJUMP:
-                                    DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.jumpHND[game.timer / 3 % 4], true);
-                                    break;
-                                case CHANGE_GRAVITY2:
-                                    DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.gravity1[game.timer / 3 % 6], true);
-                                    break;
-                                case GOAL2:
-                                    DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY - 180, stage.goalHND, true);
-                                    break;
-                                default:
-                                    DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.chipHND[stage.map_copy[y][x]], true);
-                                    break;
+                                    switch (stage.map_copy[y][x])
+                                    {
+                                    case BOTTOM_JUMPPAD:
+                                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY - 38, stage.padHND[game.timer / 3 % 14], true);
+                                        break;
+                                    case TOP_JUMPPAD:
+                                        DrawRotaGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY + 46, 1.0, PI, stage.padHND[game.timer / 3 % 14], true);
+                                        break;
+                                    case AIRJUMP:
+                                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.jumpHND[game.timer / 3 % 4], true);
+                                        break;
+                                    case CHANGE_GRAVITY2:
+                                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.gravity1[game.timer / 3 % 6], true);
+                                        break;
+                                    case GOAL2:
+                                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY - 180, stage.goalHND, true);
+                                        break;
+                                    default:
+                                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.chip1HND[stage.map_copy[y][x]], true);
+                                        break;
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                switch (stage.map_copy[y][x])
+                                else
                                 {
-                                case BOTTOM_JUMPPAD:
-                                    DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY - 38, stage.padHND[game.timer / 3 % 14], true);
-                                    break;
-                                case TOP_JUMPPAD:
-                                    DrawRotaGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, 1.0, PI, stage.padHND[game.timer / 3 % 14], true);
-                                    break;
-                                case AIRJUMP:
-                                    DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.jumpHND[game.timer / 3 % 4], true);
-                                    break;
-                                case CHANGE_GRAVITY2:
-                                    DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.gravity2[5 - game.timer / 3 % 6], true);
-                                    break;
-                                case GOAL2:
-                                    DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY - 180, stage.goalHND, true);
-                                    break;
-                                default:
-                                    DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.chipHND[stage.map_copy[y][x]], true);
-                                    break;
+                                    switch (stage.map_copy[y][x])
+                                    {
+                                    case BOTTOM_JUMPPAD:
+                                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY - 38, stage.padHND[game.timer / 3 % 14], true);
+                                        break;
+                                    case TOP_JUMPPAD:
+                                        DrawRotaGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY + 46, 1.0, PI, stage.padHND[game.timer / 3 % 14], true);
+                                        break;
+                                    case AIRJUMP:
+                                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.jumpHND[game.timer / 3 % 4], true);
+                                        break;
+                                    case CHANGE_GRAVITY2:
+                                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.gravity2[5 - game.timer / 3 % 6], true);
+                                        break;
+                                    case GOAL2:
+                                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY - 180, stage.goalHND, true);
+                                        break;
+                                    default:
+                                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.chip2HND[stage.map_copy[y][x]], true);
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -155,7 +160,77 @@ void stage_draw(void)
                 }
             }
         }
+        break;
+    case STAGE2:
+        for (int y = 0; y < STAGE_SIZE_Y; y++)
+        {
+            for (int x = 0; x < STAGE_SIZE_X; x++)
+            {
+                if (stage.map_copy[y][x] != EMPTY)
+                {
+                    if (stage.map_copy[y][x] != HOLE)
+                    {
+                        if (stage.map_copy[y][x] != CHANGE_GRAVITY)
+                        {
+                            if (stage.map_copy[y][x] != GOAL)
+                            {
+                                if (pl.gravityflg == true)
+                                {
+                                    switch (stage.map_copy[y][x])
+                                    {
+                                    case BOTTOM_JUMPPAD:
+                                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY - 38, stage.padHND[game.timer / 3 % 14], true);
+                                        break;
+                                    case TOP_JUMPPAD:
+                                        DrawRotaGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY + 46, 1.0, PI, stage.padHND[game.timer / 3 % 14], true);
+                                        break;
+                                    case AIRJUMP:
+                                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.jumpHND[game.timer / 3 % 4], true);
+                                        break;
+                                    case CHANGE_GRAVITY2:
+                                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.gravity1[game.timer / 3 % 6], true);
+                                        break;
+                                    case GOAL2:
+                                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY - 180, stage.goalHND, true);
+                                        break;
+                                    default:
+                                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.chip1HND[stage.map_copy[y][x]], true);
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    switch (stage.map_copy[y][x])
+                                    {
+                                    case BOTTOM_JUMPPAD:
+                                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY - 38, stage.padHND[game.timer / 3 % 14], true);
+                                        break;
+                                    case TOP_JUMPPAD:
+                                        DrawRotaGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY + 46, 1.0, PI, stage.padHND[game.timer / 3 % 14], true);
+                                        break;
+                                    case AIRJUMP:
+                                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.jumpHND[game.timer / 3 % 4], true);
+                                        break;
+                                    case CHANGE_GRAVITY2:
+                                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.gravity2[5 - game.timer / 3 % 6], true);
+                                        break;
+                                    case GOAL2:
+                                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY - 180, stage.goalHND, true);
+                                        break;
+                                    default:
+                                        DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.chip2HND[stage.map_copy[y][x]], true);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        break;
     }
+
 }
 
 // ステージの終了処理
@@ -163,7 +238,8 @@ void stage_end(void)
 {
     for (int i = 0; i < STAGE_ALLNUM; i++)
     {
-        DeleteGraph(stage.chipHND[i]);
+        DeleteGraph(stage.chip1HND[i]);
+        DeleteGraph(stage.chip2HND[i]);
     }
     for (int i = 0; i < 14; i++)
     {

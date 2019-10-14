@@ -32,7 +32,7 @@ public:
     int bgHND[8] = { 0 };		    // 背景のデータハンドル
     int reHND[2] = { 0 };           // リトライ選択用のデータハンドル
     int sceneHND = 0;
-    int bgmHND = 0;
+    //int bgmHND = 0;
     int decideSE = 0;
     int choiceSE = 0;
     int deathSE = 0;                // 死亡SE

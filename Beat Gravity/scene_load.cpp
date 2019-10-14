@@ -20,8 +20,15 @@ void load_initialize(void)
 {
     load.state = 0;
     load.timer = 0;
+    load.rnd = GetRand(5);
     load.transition_flg = false;
-    load.bgHND = LoadGraph("Data\\Images\\load_bg.png");
+    LoadDivGraph("Data\\Images\\load_bg.png", 13, 13, 1, 1920, 1080, load.bgHND);
+    load.bg[0] = LoadGraph("Data\\Images\\load1.png");
+    load.bg[1] = LoadGraph("Data\\Images\\load2.png");
+    load.bg[2] = LoadGraph("Data\\Images\\load3.png");
+    load.bg[3] = LoadGraph("Data\\Images\\load4.png");
+    load.bg[4] = LoadGraph("Data\\Images\\load5.png");
+    load.bg[5] = LoadGraph("Data\\Images\\load6.png");
 }
 
 void load_update(void)
@@ -55,6 +62,10 @@ void load_update(void)
         //if (key_trg[KEY_INPUT_4])nextScene = SCENE_GAME;
         //if (key_trg[KEY_INPUT_5])nextScene = SCENE_RESULT;
         //-------------------------------
+        if (load.timer > 200)
+        {
+            nextScene = SCENE_GAME;
+        }
         break;
     }
     load.timer++;
@@ -62,7 +73,8 @@ void load_update(void)
 
 void load_draw(void)
 {
-    DrawGraph(0, 0, load.bgHND, false);
+    DrawGraph(0, 0, load.bgHND[load.timer / 5 % 13], true);
+    DrawGraph(0, 0, load.bg[load.rnd], true);
 
     // debugóp ---------------------------------------------------------
     //DrawFormatString(0, 0, GetColor(255, 255, 255), "ÉVÅ[ÉìêÿÇËë÷Ç¶");
@@ -76,5 +88,12 @@ void load_draw(void)
 
 void load_end(void)
 {
-    DeleteGraph(load.bgHND);
+    for (int i = 0; i < 13; i++)
+    {
+        DeleteGraph(load.bgHND[i]);
+    }
+    for (int i = 0; i < 6; i++)
+    {
+        DeleteGraph(load.bg[i]);
+    }
 }

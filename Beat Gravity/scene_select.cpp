@@ -28,6 +28,8 @@ void select_initialize(void)
     Select.bgposY = 0;
     Select.transition_flg = false;
     Select.bgHND = LoadGraph("Data\\Images\\select_bg.png");
+    Select.bg1HND = LoadGraph("Data\\Images\\select_bg1.png");
+    Select.bg2HND = LoadGraph("Data\\Images\\select_bg2.png");
     Select.numHND[STAGE1] = LoadGraph("Data\\Images\\select1.png");
     Select.numHND[STAGE2] = LoadGraph("Data\\Images\\select2.png");
     //Select.numHND[STAGE3] = LoadGraph("Data\\Images\\select3.png");
@@ -98,7 +100,6 @@ void select_update(void)
         {
             StopSoundMem(stage.stageBGM[stage.num]);
             PlaySoundMem(Select.decideSE, DX_PLAYTYPE_BACK, true);
-            game.bgmHND = stage.stageBGM[stage.num];
             Select.state = NEXT;
         }
         break;
@@ -108,7 +109,7 @@ void select_update(void)
         if (Select.bgposX < -300)
         {
             Select.bgposX = -300;
-            nextScene = SCENE_GAME;
+            nextScene = SCENE_LOAD;
         }
         Select.timer++;
         break;
@@ -117,13 +118,16 @@ void select_update(void)
 
 void select_draw(void)
 {
-    DrawGraph(0, 0, Select.bgHND, false);
     switch (stage.num)
     {
     case STAGE1:
+        DrawGraph(0, 0, Select.bg1HND, true);
+        DrawGraph(0, 0, Select.bgHND, true);
         DrawGraph(0, 0, Select.numHND[STAGE1], true);
         break;
     case STAGE2:
+        DrawGraph(0, 0, Select.bg2HND, true);
+        DrawGraph(0, 0, Select.bgHND, true);
         DrawGraph(0, 0, Select.numHND[STAGE2], true);
         break;
     //case STAGE3:
@@ -148,6 +152,8 @@ void select_draw(void)
 void select_end(void)
 {
     DeleteGraph(Select.bgHND);
+    DeleteGraph(Select.bg1HND);
+    DeleteGraph(Select.bg2HND);
     DeleteGraph(Select.sceneHND);
     DeleteSoundMem(Select.decideSE);
     DeleteSoundMem(Select.choiceSE);

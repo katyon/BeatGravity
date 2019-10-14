@@ -108,7 +108,8 @@ void game_update(void)
         game_initialize();
         player_initialize();
         stage_initialize();
-        PlaySoundMem(game.bgmHND, DX_PLAYTYPE_BACK, true);
+        PlaySoundMem(stage.stageBGM[stage.num], DX_PLAYTYPE_BACK, true);
+
 
         game.state = NORMAL;
         break;
@@ -320,7 +321,11 @@ void game_update(void)
                 if (detect_chip(pl.posX + 10, pl.posY + 10) == BOTTOM_NEEDLE ||
                     detect_chip(pl.posX + CHIP_SIZE - 1 - 10, pl.posY + 10) == BOTTOM_NEEDLE ||
                     detect_chip(pl.posX + 10, pl.posY + CHIP_SIZE - 1 - 10) == BOTTOM_NEEDLE ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1 - 10, pl.posY + CHIP_SIZE - 1 - 10) == BOTTOM_NEEDLE)
+                    detect_chip(pl.posX + CHIP_SIZE - 1 - 10, pl.posY + CHIP_SIZE - 1 - 10) == BOTTOM_NEEDLE ||
+                    detect_chip(pl.posX + 10, pl.posY + 10) == TOP_NEEDLE ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1 - 10, pl.posY + 10) == TOP_NEEDLE ||
+                    detect_chip(pl.posX + 10, pl.posY + CHIP_SIZE - 1 - 10) == TOP_NEEDLE ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1 - 10, pl.posY + CHIP_SIZE - 1 - 10) == TOP_NEEDLE)
                 {
                     // 死亡判定
                     game.deathflg = true;
@@ -588,6 +593,14 @@ void game_update(void)
                 // クリア判定
                 game.clearflg = true;
             }
+            // 強制ダウン
+            if (detect_chip(pl.posX, pl.posY) == CHANGE ||
+                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == CHANGE ||
+                detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == CHANGE ||
+                detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == CHANGE)
+            {
+                pl.gravityflg = true;
+            }
 
             // 背景スクロール処理
             game.bg1posX -= game.bg1speed;
@@ -642,7 +655,7 @@ void game_update(void)
     case RETRY:
 #pragma region RETRY
         ///// リトライ /////
-        StopSoundMem(game.bgmHND);
+        StopSoundMem(stage.stageBGM[stage.num]);
 
         if (key_trg[KEY_INPUT_LEFT])
         {
@@ -947,7 +960,7 @@ void retry_draw(void)
         game.percentage = 100 - game.timer / 72;
         break;
     case STAGE2:
-        game.percentage = 100 - game.timer / 72;
+        game.percentage = 100 - game.timer / 65;
         break;
     }
     if (game.percentage < 0)
@@ -972,7 +985,8 @@ void game_end(void)
     }
 
     DeleteGraph(game.sceneHND);
-    DeleteSoundMem(game.bgmHND);
+    DeleteSoundMem(stage.stageBGM[STAGE1]);
+    DeleteSoundMem(stage.stageBGM[STAGE2]);
     DeleteSoundMem(game.decideSE);
     DeleteSoundMem(game.choiceSE);
     DeleteSoundMem(game.deathSE);

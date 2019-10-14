@@ -7,7 +7,9 @@ class LOAD
 public:
     int state = 0;					// 状態
     int timer = 0;					// タイマー
-    int bgHND = 0;					// 背景のデータハンドル
+    int rnd = 0;
+    int bgHND[13] = { 0 };			// 背景のデータハンドル
+    int bg[6] = { 0 };
     bool transition_flg = false;	// シーン遷移用のフラグ
 };
 
