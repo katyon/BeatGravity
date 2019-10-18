@@ -296,14 +296,18 @@ void game_update(void)
                 }
                 // ï«(ç∂)
                 if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == BOTTOM_LEFT ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_LEFT)
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == BOTTOM_LEFT ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == LDARK ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == LDARK)
                 {
                     // éÄñSîªíË
                     game.deathflg = true;
                 }
                 // ï«(âE)
                 if (detect_chip(pl.posX, pl.posY) == BOTTOM_RIGHT ||
-                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM_RIGHT)
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == BOTTOM_RIGHT ||
+                    detect_chip(pl.posX, pl.posY) == RDARK ||
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == RDARK)
                 {
                     // éÄñSîªíË
                     game.deathflg = true;
@@ -468,14 +472,18 @@ void game_update(void)
                 }
                 // ï«(ç∂)
                 if (detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == TOP_LEFT ||
-                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == TOP_LEFT)
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == TOP_LEFT ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY) == LDARK ||
+                    detect_chip(pl.posX + CHIP_SIZE - 1, pl.posY + CHIP_SIZE - 1) == LDARK)
                 {
                     // èdóÕîΩì]
                     pl.gravityflg = true;
                 }
                 // ï«(âE)
                 if (detect_chip(pl.posX, pl.posY) == TOP_RIGHT ||
-                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == TOP_RIGHT)
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == TOP_RIGHT ||
+                    detect_chip(pl.posX, pl.posY) == RDARK ||
+                    detect_chip(pl.posX, pl.posY + CHIP_SIZE - 1) == RDARK)
                 {
                     // èdóÕîΩì]
                     pl.gravityflg = true;

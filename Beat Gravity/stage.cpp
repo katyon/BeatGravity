@@ -106,10 +106,6 @@ void stage_draw(void)
                         {
                             if (stage.map_copy[y][x] != GOAL)
                             {
-                                if (stage.map_copy[y][x] != GOAL2)
-                                {
-                                    if (stage.map_copy[y][x] != CHANGE_GRAVITY2)
-                                    {
                                         if (stage.map_copy[y][x] != CHANGE)
                                         {
                                             if (pl.gravityflg == true)
@@ -156,7 +152,7 @@ void stage_draw(void)
                                                     DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY - 180, stage.goalHND, true);
                                                     break;
                                                 default:
-                                                    DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.chip2HND[stage.map_copy[y][x]], true);
+                                                    DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.chip1HND[stage.map_copy[y][x]], true);
                                                     break;
                                                 }
                                             }
@@ -167,8 +163,6 @@ void stage_draw(void)
                         }
                     }
                 }
-            }
-        }
         break;
     case STAGE2:
         for (int y = 0; y < STAGE_SIZE_Y; y++)
@@ -183,10 +177,6 @@ void stage_draw(void)
                         {
                             if (stage.map_copy[y][x] != GOAL)
                             {
-                                if (stage.map_copy[y][x] != GOAL2)
-                                {
-                                    if (stage.map_copy[y][x] != CHANGE_GRAVITY2)
-                                    {
                                         if (stage.map_copy[y][x] != CHANGE)
                                         {
                                             if (pl.gravityflg == true)
@@ -209,7 +199,7 @@ void stage_draw(void)
                                                     DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY - 180, stage.goalHND, true);
                                                     break;
                                                 default:
-                                                    DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.chip1HND[stage.map_copy[y][x]], true);
+                                                    DrawGraph(CHIP_SIZE * x - pl.posX + pl.init_posX, CHIP_SIZE * y - pl.posY + pl.init_posY, stage.chip2HND[stage.map_copy[y][x]], true);
                                                     break;
                                                 }
                                             }
@@ -242,10 +232,8 @@ void stage_draw(void)
                                 }
                             }
                         }
-                    }
                 }
             }
-        }
         break;
     }
 
