@@ -30,6 +30,7 @@ public:
 	bool transition_flg = false;	// シーン遷移用のフラグ
 };
 
+
 // プロトタイプ宣言 -----------------------------------------------------
 void title_initialize(void);	// タイトルの初期設定
 void title_update(void);		// タイトルの更新処理
